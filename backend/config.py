@@ -12,7 +12,7 @@ class DevConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO=True 
 
-class ProdConfig(Config):
+class ProdConfig(Config): 
     pass
 
 class TestConfig(Config):
