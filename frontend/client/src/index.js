@@ -9,11 +9,15 @@ import Signup from "./components/Signup";
 import Blogs from "./components/Blogs";
 
 const App = () => {
-  const [loggedIn, setLogIn] = useState(false);
   return (
     <Router>
+      {/*
+        Alerts are a useful way to indicate that the sign-up was succesful or not. We use the predefined 
+        style and functionality created by the react-bootstrap library. Notice that the onClick, sets the Show
+        variable to false. This is to remove the pop up and not show it.     
+        */}
       <div className="">
-        <NavBar loggedin={loggedIn} />
+        <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Blogs" element={<Blogs />} />
@@ -26,4 +30,5 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
