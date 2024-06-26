@@ -64,6 +64,12 @@ class Login(Resource):
             return jsonify(
                 {"accessToken": access_token, "refreshToken": refresh_token}
             )
+    
+    # Remove on deployment
+    @auth_ns.marshal_list_with(login_model)
+    def get(self):
+        users = User.query.all()
+        return users
 
 @auth_ns.route('/refresh')
 class RefreshResource(Resource):
