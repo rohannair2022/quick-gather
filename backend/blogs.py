@@ -18,6 +18,7 @@ blog_model = blog_ns.model(
     }
 )
 
+
 @blog_ns.route('/hello')
 class HelloResource(Resource):
     def get(self):
@@ -28,12 +29,11 @@ class HelloResource(Resource):
 class BlogsResource(Resource):
 
     @blog_ns.marshal_list_with(blog_model)
-    @jwt_required()
     def get(self):
         blogs = Blog.query.all()
         return blogs
 
-    @blog_ns.marshal_with(blog_model)
+    @blog_ns.expect(blog_model)
     @jwt_required()
     def post(self):
         data = request.get_json()
@@ -42,7 +42,7 @@ class BlogsResource(Resource):
             description = data.get('description')
         )
         new_blog.save()
-        return new_blog, 201
+        return jsonify({"message" : "Blog Created"})
 
 
 @blog_ns.route('/blog/<int:id>')

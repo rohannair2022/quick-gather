@@ -58,12 +58,17 @@ class Login(Resource):
 
         if db_user and check_password_hash(db_user.password, password):
             
+            # Creation of random alphanumeric characters. 
             access_token = create_access_token(identity=db_user.username)
             refresh_token = create_refresh_token(identity=db_user.username)
 
             return jsonify(
-                {"accessToken": access_token, "refreshToken": refresh_token}
+                {"accessToken": access_token, "refreshToken": refresh_token, "message": "Success"}
             )
+        else:
+            return jsonify({
+                "message" : "Username or Password is wrong."
+            })
     
     # Remove on deployment
     @auth_ns.marshal_list_with(login_model)
@@ -79,3 +84,4 @@ class RefreshResource(Resource):
         new_access_token = create_access_token(identity=current_user)
         return make_response(jsonify({"accessToken":new_access_token})), 200
 
+ 

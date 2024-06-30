@@ -13,6 +13,7 @@
     "react-hook-form": "^7.52.0",
     "react-router-dom": "^6.24.0",
     "react-scripts": "5.0.1",
+    "react-token-auth": "^2.3.8",
     "web-vitals": "^2.1.4"
   },
   "proxy": "http://127.0.0.1:5000",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
   }
 }

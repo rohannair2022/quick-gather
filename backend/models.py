@@ -35,6 +35,7 @@ class Blog(db.Model):
     def update(self, title, description):
         self.title = title
         self.description = description 
+        db.session.commit()
 
 # Table User: id (primary), username, email, password 
 class User(db.Model):

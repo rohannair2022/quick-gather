@@ -8,8 +8,48 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
+import { logout, useAuth } from "../auth";
+
+function LoggedInLinks() {
+  return (
+    <>
+      <Link to="/" className="nav-link">
+        Home
+      </Link>
+
+      <Link to="/Blogs" className="nav-link">
+        Create Blogs
+      </Link>
+
+      <a href="/" onClick={logout} className="nav-link">
+        Log-Out
+      </a>
+    </>
+  );
+}
+
+function LoggedOutLinks() {
+  return (
+    <>
+      <Link to="/" className="nav-link">
+        Home
+      </Link>
+      <Link to="/Blogs" className="nav-link">
+        Ask our AI to plan
+      </Link>
+      <Link to="/Login" className="nav-link">
+        Log-In
+      </Link>
+      <Link to="/Signup" className="nav-link">
+        Sign-up
+      </Link>
+    </>
+  );
+}
 
 export default function NavBar(props) {
+  const [logged] = useAuth();
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
@@ -21,27 +61,11 @@ export default function NavBar(props) {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Link to="/" className="nav-link">
-              Home
-            </Link>
-            <Link to="/Blogs" className="nav-link">
-              Blogs
-            </Link>
-            <Link to="/Blogs" className="nav-link">
-              Groups
-            </Link>
-            <Link to="/Blogs" className="nav-link">
-              Ask our AI to plan
-            </Link>
-            <Link to="/Logout" className="nav-link">
-              Log-Out
-            </Link>
-            <Link to="/Login" className="nav-link">
-              Log-In
-            </Link>
-            <Link to="/Signup" className="nav-link">
-              Sign-up
-            </Link>
+            {logged ? (
+              <LoggedInLinks></LoggedInLinks>
+            ) : (
+              <LoggedOutLinks></LoggedOutLinks>
+            )}
           </Nav>
           <Form className="d-flex">
             <Form.Control
