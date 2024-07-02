@@ -5,7 +5,7 @@ import { useState } from "react";
 const Blog = (props) => {
   return (
     <Card style={{ marginTop: 20 }}>
-      <Card.Header>Featured</Card.Header>
+      <Card.Header>{`Group ID : ${props.id}`}</Card.Header>
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.description}</Card.Text>

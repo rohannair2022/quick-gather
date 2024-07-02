@@ -175,6 +175,7 @@ const LoggedinHome = () => {
         <div>
           <Blog
             title={blog.title}
+            id={blog.id}
             key={index}
             description={blog.description}
             handleshow1={() => {

@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Signup from "./components/Signup";
 import Blogs from "./components/Blogs";
+import JoinGroup from "./components/joinGroup";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/Login" element={<Login />} />
           <Route path="/Logout" element={<Logout />} />
           <Route path="/Signup" element={<Signup />} />
+          <Route path="/JoinGroup" element={<JoinGroup />} />
         </Routes>
       </div>
     </Router>
