@@ -14,7 +14,15 @@ blog_model = blog_ns.model(
     {
         "id": fields.Integer(),
         "title": fields.String(),
-        "description":fields.String()
+        "description":fields.String(),
+        "username":fields.String()
+    }
+)
+
+blog_model_get = blog_ns.model(
+    "Blog",
+    {
+        "username":fields.String()
     }
 )
 
@@ -25,22 +33,36 @@ class HelloResource(Resource):
         return {"message":"Hello World"}
     
 
+@blog_ns.route('/blogs/<string:username>')
+class BlogsResource(Resource):
+
+    @blog_ns.expect(blog_model_get)
+    @blog_ns.marshal_list_with(blog_model)
+    def get(self, username):
+        db_user =  User.query.filter_by(username = username).first()
+        return db_user.blogs
+
+
 @blog_ns.route('/blogs')
 class BlogsResource(Resource):
 
+    @blog_ns.expect(blog_model_get)
     @blog_ns.marshal_list_with(blog_model)
     def get(self):
-        blogs = Blog.query.all()
-        return blogs
+        data = request.get_json()
+        db_user =  User.query.filter_by(username = data.get('username')).first()
+        return db_user.blogs
 
     @blog_ns.expect(blog_model)
     @jwt_required()
     def post(self):
         data = request.get_json()
+        db_user =  User.query.filter_by(username = data.get('username')).first()
         new_blog = Blog(
             title = data.get('title'),
             description = data.get('description')
         )
+        new_blog.users.append(db_user)
         new_blog.save()
         return jsonify({"message" : "Blog Created"})
 

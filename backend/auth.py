@@ -63,7 +63,7 @@ class Login(Resource):
             refresh_token = create_refresh_token(identity=db_user.username)
 
             return jsonify(
-                {"accessToken": access_token, "refreshToken": refresh_token, "message": "Success"}
+                {"accessToken": access_token, "refreshToken": refresh_token, "message": "Success", "username": data.get('username')}
             )
         else:
             return jsonify({

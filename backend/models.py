@@ -6,11 +6,17 @@ from exts import db
 # flask shell 
 # db.create_all()
 
+user_channel = db.Table('user_chanel', 
+                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+                        db.Column('blog_id', db.Integer(), db.ForeignKey('blog.id')))
+
+
 # Table Blog: id (primary), title, description
 class Blog(db.Model):
     id = db.Column(db.Integer(), primary_key = True)
-    title = db.Column(db.String(), nullable=False)
-    description = db.Column(db.String(), nullable=False)
+    title = db.Column(db.String(30), nullable=False)
+    description = db.Column(db.Text(), nullable=False)
+    users = db.relationship('User', secondary=user_channel, backref='blogs')
 
     def __repr__(self):
         return f'Blog Name {self.title}'
@@ -39,11 +45,11 @@ class Blog(db.Model):
 
 # Table User: id (primary), username, email, password 
 class User(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(25), nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), unique=True, nullable=False)
     email = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.Text(), nullable = False)
-
+    password = db.Column(db.String(25), nullable=False)
+    
     def __repr__(self):
         return f"User {self.username}"
     
