@@ -18,7 +18,11 @@ function LoggedInLinks() {
       </Link>
 
       <Link to="/Blogs" className="nav-link">
-        Create Blogs
+        Create Group
+      </Link>
+
+      <Link to="/joinGroup" className="nav-link">
+        Join Group
       </Link>
 
       <a href="/" onClick={logout} className="nav-link">

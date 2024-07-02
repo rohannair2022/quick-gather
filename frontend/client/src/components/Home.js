@@ -9,6 +9,7 @@ const LoggedinHome = () => {
   const [blogs, setBlog] = useState([]);
   const [show1, setshow1] = useState(false);
   const [show, setShow] = useState(false);
+
   const [serverResponse, setServerResponse] = useState("");
   const [blogId, setBlogId] = useState(0);
 
@@ -24,6 +25,7 @@ const LoggedinHome = () => {
   const handleClose = () => {
     setshow1(false);
   };
+
   const handleshow1 = (id) => {
     setshow1(true);
     setBlogId(id);
@@ -36,9 +38,26 @@ const LoggedinHome = () => {
   };
 
   const fetchBlogs = () => {
-    fetch("/blog/blogs")
-      .then((res) => res.json())
-      .then((data) => setBlog(data));
+    const username = JSON.parse(localStorage.getItem("username"));
+    const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch(`/blog/blogs/${encodeURIComponent(username.name)}`, requestOptions)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => setBlog(data))
+      .catch((error) => console.error("Error fetching blogs:", error));
   };
 
   useEffect(() => {
@@ -78,9 +97,28 @@ const LoggedinHome = () => {
       });
   };
 
+  const deleteBlog = (id) => {
+    const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "content-type": "application/json",
+      },
+    };
+
+    fetch(`/blog/blog/${id}`, requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        fetchBlogs(); // Re-fetch blogs after successful update
+      });
+  };
+
   return (
     <div style={{ margin: 50 }}>
       <h1>Lastest Posts</h1>
+
       <Modal show={show1} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Update Blog</Modal.Title>
@@ -142,6 +180,7 @@ const LoggedinHome = () => {
             handleshow1={() => {
               handleshow1(blog.id);
             }}
+            deleteBlog={() => deleteBlog(blog.id)}
           />
         </div>
       ))}

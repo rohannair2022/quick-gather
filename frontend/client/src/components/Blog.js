@@ -11,6 +11,9 @@ const Blog = (props) => {
         <Card.Text>{props.description}</Card.Text>
         <Button variant="primary" onClick={props.handleshow1}>
           Update
+        </Button>{" "}
+        <Button variant="danger" onClick={props.deleteBlog}>
+          Delete
         </Button>
       </Card.Body>
     </Card>

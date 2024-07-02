@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [show, setShow] = useState(false);
+  const [username, setUsername] = useState("");
   const [serverResponse, setServerResponse] = useState("");
 
   const {
@@ -41,6 +42,10 @@ const Login = () => {
           console.log(data);
           login(data);
           navigate("/");
+          localStorage.setItem(
+            "username",
+            JSON.stringify({ name: data.username })
+          );
         } else {
           setShow(true);
           setServerResponse(data.message);

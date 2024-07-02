@@ -20,9 +20,12 @@ const Blogs = () => {
   const submitForm = (data) => {
     //console.log(data);
     // Works fine the data is coming through the form
+    const username = JSON.parse(localStorage.getItem("username"));
+
     const body = {
       title: data.title,
       description: data.description,
+      username: username.name,
     };
 
     const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
@@ -60,6 +63,7 @@ const Blogs = () => {
             {...register("title", { required: true })}
           />
         </Form.Group>
+        <br></br>
         <Form.Group>
           <Form.Label>Description</Form.Label>
           <Form.Control
@@ -68,6 +72,49 @@ const Blogs = () => {
             {...register("description", { required: true })}
           />
         </Form.Group>
+        <br></br>
+        <Form.Group>
+          <Form.Label>Mood</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            placeholder="Select a Mood"
+          >
+            <option>Select a Mood</option>
+            <option value="1">Chill</option>
+            <option value="2">Energetic</option>
+            <option value="3">Traditional</option>
+            <option value="4">Anything</option>
+          </Form.Select>
+        </Form.Group>
+        <br></br>
+        <Form.Group>
+          <Form.Label>Budget</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            placeholder="Select a Mood"
+          >
+            <option>Select a Mood</option>
+            <option value="1">{`<50`}</option>
+            <option value="2">{`50 - 500`}</option>
+            <option value="3">{`500 - 2500`}</option>
+            <option value="4">No Budget</option>
+          </Form.Select>
+        </Form.Group>
+        <br></br>
+        <Form.Group>
+          <Form.Label>Travel</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            placeholder="Select a Mood"
+          >
+            <option>Select a Mood</option>
+            <option value="1">Close By</option>
+            <option value="2">Anywhere in the City</option>
+            <option value="3">Outside the city within the country</option>
+            <option value="4">Outside the country</option>
+          </Form.Select>
+        </Form.Group>
+        <br></br>
         <Form.Group>
           <Button as="sub" variant="primary" onClick={handleSubmit(submitForm)}>
             Create Blog
