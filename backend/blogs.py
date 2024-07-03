@@ -14,8 +14,11 @@ blog_model = blog_ns.model(
     {
         "id": fields.Integer(),
         "title": fields.String(),
-        "description":fields.String(),
-        "username":fields.String()
+        "description": fields.String(),
+        "username": fields.String(),
+        "mood": fields.String(),
+        "travel": fields.String(),
+        "budget": fields.String()
     }
 )
 
@@ -60,10 +63,14 @@ class BlogsResource(Resource):
         db_user =  User.query.filter_by(username = data.get('username')).first()
         new_blog = Blog(
             title = data.get('title'),
-            description = data.get('description')
+            description = data.get('description'),
+            budget = data.get('budget'),
+            travel = data.get('travel'),
+            mood = data.get('mood'),
         )
         new_blog.users.append(db_user)
         new_blog.save()
+        db_user.blogs.append(new_blog)
         return jsonify({"message" : "Blog Created"})
 
 
@@ -88,3 +95,20 @@ class BlogResource(Resource):
         blog_to_delete = Blog.query.get_or_404(id)
         blog_to_delete.delete()
         return blog_to_delete
+    
+
+@blog_ns.route('/join/<int:id>')
+class BlogResource(Resource):
+    @jwt_required()
+    @blog_ns.expect(blog_model)
+    def put(self, id):
+        try:
+            data = request.get_json()
+            blog_to_add = Blog.query.get_or_404(id)
+            user_to_add = User.query.filter_by(username=data.get('username')).first_or_404()
+            blog_to_add.users.append(user_to_add)
+            user_to_add.blogs.append(blog_to_add)
+            db.session.commit()
+            return {"message":"Success"}
+        except:
+            return {"message":"Group ID does not exist"}

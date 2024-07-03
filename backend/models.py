@@ -4,7 +4,10 @@ from exts import db
 # We create the db (database) using the following commands:
 # export FLASK_APP = main.py
 # flask shell 
+# db.drop_all()
 # db.create_all()
+
+# addtionally migrate the chnages using flask db upgrade
 
 user_channel = db.Table('user_chanel', 
                         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
@@ -16,6 +19,9 @@ class Blog(db.Model):
     id = db.Column(db.Integer(), primary_key = True)
     title = db.Column(db.String(30), nullable=False)
     description = db.Column(db.Text(), nullable=False)
+    mood = db.Column(db.String(30), nullable=False)
+    budget = db.Column(db.String(30), nullable=False)
+    travel = db.Column(db.String(30), nullable=False)
     users = db.relationship('User', secondary=user_channel, backref='blogs')
 
     def __repr__(self):
@@ -48,7 +54,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
     email = db.Column(db.String(80), nullable=False)
-    password = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     
     def __repr__(self):
         return f"User {self.username}"
