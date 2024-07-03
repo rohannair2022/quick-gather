@@ -26,6 +26,9 @@ const Blogs = () => {
       title: data.title,
       description: data.description,
       username: username.name,
+      mood: data.mood,
+      travel: data.travel,
+      budget: data.budget,
     };
 
     const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
@@ -78,6 +81,7 @@ const Blogs = () => {
           <Form.Select
             aria-label="Default select example"
             placeholder="Select a Mood"
+            {...register("mood", { required: true })}
           >
             <option>Select a Mood</option>
             <option value="1">Chill</option>
@@ -92,6 +96,7 @@ const Blogs = () => {
           <Form.Select
             aria-label="Default select example"
             placeholder="Select a Mood"
+            {...register("budget", { required: true })}
           >
             <option>Select a Mood</option>
             <option value="1">{`<50`}</option>
@@ -106,6 +111,7 @@ const Blogs = () => {
           <Form.Select
             aria-label="Default select example"
             placeholder="Select a Mood"
+            {...register("travel", { required: true })}
           >
             <option>Select a Mood</option>
             <option value="1">Close By</option>
