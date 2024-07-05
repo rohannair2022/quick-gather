@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields, Namespace
-from models import Blog, User
+from models import Blog, User, User_info
 from exts import db
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,7 +15,7 @@ blog_model = blog_ns.model(
         "id": fields.Integer(),
         "title": fields.String(),
         "description": fields.String(),
-        "username": fields.String(),
+        "username": fields.String(),  
         "mood": fields.String(),
         "travel": fields.String(),
         "budget": fields.String()
@@ -71,6 +71,17 @@ class BlogsResource(Resource):
         new_blog.users.append(db_user)
         new_blog.save()
         db_user.blogs.append(new_blog)
+
+        new_info = User_info(
+            user_id = db_user.id,
+            blog_id = new_blog.id,
+            blog_budget = new_blog.budget,
+            blog_travel = new_blog.travel,
+            blog_mood = new_blog.mood,
+        )
+
+        new_info.save()
+
         return jsonify({"message" : "Blog Created"})
 
 
@@ -109,6 +120,16 @@ class BlogResource(Resource):
             blog_to_add.users.append(user_to_add)
             user_to_add.blogs.append(blog_to_add)
             db.session.commit()
+            
+            new_info = User_info(
+                user_id = user_to_add.id,
+                blog_id = blog_to_add.id,
+                blog_budget = blog_to_add.budget,
+                blog_travel = blog_to_add.travel,
+                blog_mood = blog_to_add.mood,
+            )
+            new_info.save()
+
             return {"message":"Success"}
         except:
             return {"message":"Group ID does not exist"}

@@ -62,3 +62,30 @@ class User(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+# Table User: user_id, blog_id, blog_title, blog_travel, blog_mood 
+class User_info(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=False)
+    blog_budget = db.Column(db.String(30), nullable=False)
+    blog_travel = db.Column(db.String(30), nullable=False)
+    blog_mood = db.Column(db.String(30), nullable=False)
+
+    # Relationships
+    user = db.relationship('User', backref=db.backref('user_infos', lazy=True))
+    blog = db.relationship('Blog', backref=db.backref('user_infos', lazy=True))
+
+    def __repr__(self):
+        return f"User_info(user_id={self.user_id}, blog_id={self.blog_id})"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
