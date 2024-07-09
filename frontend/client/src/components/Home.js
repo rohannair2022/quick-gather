@@ -99,6 +99,11 @@ const LoggedinHome = () => {
 
   const deleteBlog = (id) => {
     const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+    const username = JSON.parse(localStorage.getItem("username"));
+
+    const body = {
+      username: username.name,
+    };
 
     const requestOptions = {
       method: "DELETE",
@@ -106,6 +111,7 @@ const LoggedinHome = () => {
         Authorization: `Bearer ${token.accessToken}`,
         "content-type": "application/json",
       },
+      body: JSON.stringify(body),
     };
 
     fetch(`/blog/blog/${id}`, requestOptions)
@@ -117,7 +123,7 @@ const LoggedinHome = () => {
 
   return (
     <div style={{ margin: 50 }}>
-      <h1>Lastest Posts</h1>
+      <h1>Groups Joined</h1>
 
       <Modal show={show1} onHide={handleClose}>
         <Modal.Header closeButton>

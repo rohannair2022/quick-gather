@@ -38,9 +38,6 @@ function LoggedOutLinks() {
       <Link to="/" className="nav-link">
         Home
       </Link>
-      <Link to="/Blogs" className="nav-link">
-        Ask our AI to plan
-      </Link>
       <Link to="/Login" className="nav-link">
         Log-In
       </Link>
@@ -71,15 +68,6 @@ export default function NavBar(props) {
               <LoggedOutLinks></LoggedOutLinks>
             )}
           </Nav>
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
         </Navbar.Collapse>
       </Container>
     </Navbar>

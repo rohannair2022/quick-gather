@@ -126,7 +126,7 @@ function JoinGroup() {
 
         <Form.Group className="mb-3">
           <Button type="submit" onClick={handleSubmit(submitForm)}>
-            Sign in
+            Join Group
           </Button>
         </Form.Group>
         <Alert show={show} style={{ width: 250, background: `${color}` }}>
