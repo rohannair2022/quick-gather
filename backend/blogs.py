@@ -70,7 +70,6 @@ class BlogsResource(Resource):
         )
         new_blog.users.append(db_user)
         new_blog.save()
-        db_user.blogs.append(new_blog)
 
         new_info = User_info(
             user_id = db_user.id,
@@ -104,7 +103,27 @@ class BlogResource(Resource):
     @jwt_required()
     def delete(self, id):
         blog_to_delete = Blog.query.get_or_404(id)
-        blog_to_delete.delete()
+        data = request.get_json()
+        db_user =  User.query.filter_by(username = data.get('username')).first()
+        user_id = db_user.id
+        blog_id = blog_to_delete.id
+
+        for i in db_user.blogs:
+            if i.id == blog_id:
+                db_user.blogs.remove(i)
+
+        for j in blog_to_delete.users:
+            if j.id == user_id:
+                blog_to_delete.users.remove(i)
+        
+        if len(blog_to_delete.users) == 0:
+            blog_to_delete.delete()
+
+        db.session.commit()
+
+        db_user_info = User_info.query.filter_by(user_id = user_id, blog_id = blog_id)
+        db_user_info.delete()
+
         return blog_to_delete
     
 
@@ -119,8 +138,6 @@ class BlogResource(Resource):
             user_to_add = User.query.filter_by(username=data.get('username')).first_or_404()
             blog_to_add.users.append(user_to_add)
             user_to_add.blogs.append(blog_to_add)
-            db.session.commit()
-            
             new_info = User_info(
                 user_id = user_to_add.id,
                 blog_id = blog_to_add.id,
