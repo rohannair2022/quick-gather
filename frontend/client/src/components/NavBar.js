@@ -25,6 +25,10 @@ function LoggedInLinks() {
         Join Group
       </Link>
 
+      <Link to="/profile" className="nav-link">
+        Update Profile
+      </Link>
+
       <a href="/" onClick={logout} className="nav-link">
         Log-Out
       </a>

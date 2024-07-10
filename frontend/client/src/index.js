@@ -8,6 +8,7 @@ import Logout from "./components/Logout";
 import Signup from "./components/Signup";
 import Blogs from "./components/Blogs";
 import JoinGroup from "./components/joinGroup";
+import Profile from "./components/user_profile";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/Logout" element={<Logout />} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/JoinGroup" element={<JoinGroup />} />
+          <Route path="/Profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>
