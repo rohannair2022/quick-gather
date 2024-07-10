@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 from blogs import blog_ns
 from auth import auth_ns
+from user import user_ns
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
@@ -36,6 +37,7 @@ def create_config(config):
 
     api.add_namespace(blog_ns)
     api.add_namespace(auth_ns)
+    api.add_namespace(user_ns)
 
     # Define the DB and Tables
     @app.shell_context_processor
@@ -46,14 +48,15 @@ def create_config(config):
     return app
 
 
+app = create_config(DevConfig)
+# CORS is important to bypass the browsers same-origin policy. Different ports are considered 
+# different origin regardless if they have the same URL. The browsers same - origin policy states 
+# that any data that is accessed or requested should come from the same URL. 
+CORS(app,resources={r"/*":{"origins":"*"}})
+
+socketio = SocketIO(app,cors_allowed_origins="*")
+
+
 if __name__ == "__main__":
-
-    app = create_config(DevConfig)
-    # CORS is important to bypass the browsers same-origin policy. Different ports are considered 
-    # different origin regardless if they have the same URL. The browsers same - origin policy states 
-    # that any data that is accessed or requested should come from the same URL. 
-    CORS(app,resources={r"/*":{"origins":"*"}})
-
-    socketio = SocketIO(app,cors_allowed_origins="*")
 
     socketio.run(app, debug=True)
