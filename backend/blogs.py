@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields, Namespace
 from models import Blog, User, User_info
 from exts import db
-from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 

@@ -1,6 +1,7 @@
 # config is used to access variables from the enviorment. 
 from decouple import config
 import os 
+from datetime import timedelta
 
 
 
@@ -17,6 +18,8 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI ='postgresql://postgres:Database4833@localhost:5432/userDB'
     DEBUG = True
     SQLALCHEMY_ECHO=True 
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
 class ProdConfig(Config): 
     pass
