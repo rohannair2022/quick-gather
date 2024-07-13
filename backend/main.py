@@ -75,6 +75,15 @@ def on_leave(data):
     emit('status', {'msg': f'{username} has left the room.'}, room=room)
     leave_room(room)
 
+@socketio.on("message")
+def on_message(data):
+    username = data['username']
+    room = data['room']
+    message = data ['message']
+    print(f'User {username} said: {message} in room {room}')
+    emit('message_confirm', {'msg':message, 'username':username, 'room':room}, room=room, broadcast=True)
+    emit('status', {'msg': f'{username} has sent a message {message}'}, room=room)
+
 
 """
 

@@ -90,3 +90,9 @@ class User_info(db.Model):
 
     def update(self):
         db.session.commit()
+
+"""class Chatinfo(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=False)
+    message = db.Column(db.Text(), nullable=False)
+    date = db.Column(db.DateTime, nullable = False)"""
