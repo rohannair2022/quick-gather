@@ -6,23 +6,32 @@ import { Modal, Form, Button, Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import io from "socket.io-client";
 import { useRef } from "react";
-const socket = io("http://127.0.0.1:5000", {
-  reconnection: true,
-  reconnectionAttempts: Infinity,
-  reconnectionDelay: 1000,
-});
+const socket = io("http://127.0.0.1:5000", {});
 
 const LoggedinHome = () => {
+  // Each Group Joined
   const [blogs, setBlog] = useState([]);
-  const [show1, setshow1] = useState(false);
-  const [show2, setshow2] = useState(false);
-  const [show, setShow] = useState(false);
 
+  // Modal1: Update
+  const [showModal1, setshowModal1] = useState(false);
+
+  // Modal2: Chat
+  const [showModal2, setshowModal2] = useState(false);
+
+  // Alert Section for Update
+  const [show, setShow] = useState(false);
   const [serverResponse, setServerResponse] = useState("");
+
   const [blogId, setBlogId] = useState(0);
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState(0);
+
+  // In a joined room or not
   const [joined, setJoined] = useState(false);
+
+  // For the messages in a group
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const storedUsername = JSON.parse(localStorage.getItem("username"));
@@ -49,11 +58,29 @@ const LoggedinHome = () => {
       console.log("Recived leave confirmation:", data);
     });
 
+    socket.on("message_confirm", (data) => {
+      console.log("Received message:", data);
+      setMessages((prevMessages) => ({
+        ...prevMessages,
+        [data.room]: [
+          ...(prevMessages[data.room] || []),
+          { username: data.username, message: data.msg },
+        ],
+      }));
+    });
+
     return () => {
       socket.off("join_confirm");
       socket.off("leave_confirm");
+      socket.off("message_confirm");
     };
   }, []);
+
+  useEffect(() => {
+    if (room) {
+      joinRoom();
+    }
+  }, [room]);
 
   const joinRoom = () => {
     if (username && room) {
@@ -66,21 +93,72 @@ const LoggedinHome = () => {
   };
 
   const leaveRoom = () => {
-    if (username && room) {
+    if (username && room && joined) {
       console.log(
         `Emitting 'leave' event with username: ${username}, room: ${room}`
       );
       socket.emit("leave", { username, room });
       setJoined(false);
+      setRoom(0);
     }
   };
 
-  const handleClose = () => {
-    setshow1(false);
+  const messageRoom = (e) => {
+    e.preventDefault();
+    console.log("Submitting message:", message);
+    if (message && room) {
+      console.log(
+        `Emitting 'message' event with username: ${username}, room: ${room}, message: ${message}`
+      );
+      socket.emit("message", { username, room, message });
+      setMessage("");
+    }
   };
 
-  const handleshow1 = (id) => {
-    setshow1(true);
+  const MessageList = ({ messages, currentUser, room }) => {
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(scrollToBottom, [messages]);
+
+    const roomMessages = messages[room] || [];
+
+    return (
+      <div
+        style={{
+          height: "300px",
+          overflowY: "auto",
+          marginBottom: "20px",
+          border: "1px solid #ccc",
+          padding: "10px",
+        }}
+      >
+        {roomMessages.map((msg, index) => (
+          <div
+            key={index}
+            style={{
+              textAlign: msg.username === currentUser ? "right" : "left",
+              marginBottom: "10px",
+            }}
+          >
+            <strong>{msg.username}: </strong>
+            <span>{msg.message}</span>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+    );
+  };
+
+  const handleClose = () => {
+    setshowModal1(false);
+  };
+
+  const handleshowModal1 = (id) => {
+    setshowModal1(true);
     setBlogId(id);
     blogs.map((blog) => {
       if (blog.id == id) {
@@ -180,7 +258,7 @@ const LoggedinHome = () => {
 
       {/* 1: The modal for the Update Button */}
 
-      <Modal show={show1} onHide={handleClose}>
+      <Modal show={showModal1} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Update Blog</Modal.Title>
         </Modal.Header>
@@ -236,27 +314,35 @@ const LoggedinHome = () => {
       {/* 2: The modal for the Chat Button */}
 
       <Modal
-        show={show2}
+        show={showModal2}
         onHide={() => {
-          setshow2(false);
+          console.log("Modal closing");
+          setshowModal2(false);
           leaveRoom();
+          // Don't clear all messages, just leave the room
         }}
       >
         <Modal.Header closeButton>
           <Modal.Title>Group Name: {room}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              leaveRoom();
-              setshow2(false);
-            }}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
+        <Modal.Body>
+          <MessageList messages={messages} currentUser={username} room={room} />
+          <Form onSubmit={messageRoom}>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Control
+                type="text"
+                placeholder="Your Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Button type="submit" variant="primary">
+                Send Message
+              </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
       </Modal>
 
       {blogs.map((blog, index) => (
@@ -266,14 +352,13 @@ const LoggedinHome = () => {
             id={blog.id}
             key={index}
             description={blog.description}
-            handleshow1={() => {
-              handleshow1(blog.id);
+            handleshowModal1={() => {
+              handleshowModal1(blog.id);
             }}
             deleteBlog={() => deleteBlog(blog.id)}
             startChat={() => {
               setRoom(blog.id);
-              setshow2(true);
-              joinRoom();
+              setshowModal2(true);
             }}
           />
         </div>
