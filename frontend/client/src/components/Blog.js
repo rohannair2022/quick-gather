@@ -15,7 +15,10 @@ const Blog = (props) => {
         <Button variant="danger" onClick={props.deleteBlog}>
           Delete
         </Button>{" "}
-        <Button style={{ backgroundColor: "orange", borderColor: "white" }}>
+        <Button
+          style={{ backgroundColor: "orange", borderColor: "white" }}
+          onClick={props.startChat}
+        >
           Chat
         </Button>
       </Card.Body>

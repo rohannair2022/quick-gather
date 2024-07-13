@@ -4,14 +4,32 @@ import { useAuth } from "../auth";
 import Blog from "./Blog";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import io from "socket.io-client";
+import { useRef } from "react";
+const socket = io("http://127.0.0.1:5000", {
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+});
 
 const LoggedinHome = () => {
   const [blogs, setBlog] = useState([]);
   const [show1, setshow1] = useState(false);
+  const [show2, setshow2] = useState(false);
   const [show, setShow] = useState(false);
 
   const [serverResponse, setServerResponse] = useState("");
   const [blogId, setBlogId] = useState(0);
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState(0);
+  const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    const storedUsername = JSON.parse(localStorage.getItem("username"));
+    if (storedUsername) {
+      setUsername(storedUsername.name);
+    }
+  }, []);
 
   const {
     register,
@@ -21,6 +39,41 @@ const LoggedinHome = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    socket.on("join_confirm", (data) => {
+      console.log("Received join confirmation:", data);
+    });
+
+    socket.on("leave_confirm", (data) => {
+      console.log("Recived leave confirmation:", data);
+    });
+
+    return () => {
+      socket.off("join_confirm");
+      socket.off("leave_confirm");
+    };
+  }, []);
+
+  const joinRoom = () => {
+    if (username && room) {
+      console.log(
+        `Emitting 'join' event with username: ${username}, room: ${room}`
+      );
+      socket.emit("join", { username, room });
+      setJoined(true);
+    }
+  };
+
+  const leaveRoom = () => {
+    if (username && room) {
+      console.log(
+        `Emitting 'leave' event with username: ${username}, room: ${room}`
+      );
+      socket.emit("leave", { username, room });
+      setJoined(false);
+    }
+  };
 
   const handleClose = () => {
     setshow1(false);
@@ -125,6 +178,8 @@ const LoggedinHome = () => {
     <div style={{ margin: 50 }}>
       <h1>Groups Joined</h1>
 
+      {/* 1: The modal for the Update Button */}
+
       <Modal show={show1} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Update Blog</Modal.Title>
@@ -177,6 +232,33 @@ const LoggedinHome = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* 2: The modal for the Chat Button */}
+
+      <Modal
+        show={show2}
+        onHide={() => {
+          setshow2(false);
+          leaveRoom();
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Group Name: {room}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              leaveRoom();
+              setshow2(false);
+            }}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {blogs.map((blog, index) => (
         <div>
           <Blog
@@ -188,6 +270,11 @@ const LoggedinHome = () => {
               handleshow1(blog.id);
             }}
             deleteBlog={() => deleteBlog(blog.id)}
+            startChat={() => {
+              setRoom(blog.id);
+              setshow2(true);
+              joinRoom();
+            }}
           />
         </div>
       ))}
