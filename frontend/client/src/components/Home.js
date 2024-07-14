@@ -62,10 +62,18 @@ const LoggedinHome = () => {
       console.log("Received message:", data);
       setMessages((prevMessages) => ({
         ...prevMessages,
-        [data.room]: [
-          ...(prevMessages[data.room] || []),
+        [room]: [
+          ...(prevMessages[room] || []),
           { username: data.username, message: data.msg },
         ],
+      }));
+    });
+
+    socket.on("message_history", (data) => {
+      console.log("Received message history:", data);
+      setMessages((prevMessages) => ({
+        ...prevMessages,
+        [room]: data.messages,
       }));
     });
 
@@ -73,8 +81,9 @@ const LoggedinHome = () => {
       socket.off("join_confirm");
       socket.off("leave_confirm");
       socket.off("message_confirm");
+      socket.off("message_history");
     };
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     if (room) {
