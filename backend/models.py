@@ -6,6 +6,7 @@ from exts import db
 # flask shell 
 # db.drop_all()
 # db.create_all()
+from datetime import datetime
 
 # addtionally migrate the chnages using flask db upgrade
 
@@ -91,8 +92,24 @@ class User_info(db.Model):
     def update(self):
         db.session.commit()
 
-"""class Chatinfo(db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+class ChatMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=False)
-    message = db.Column(db.Text(), nullable=False)
-    date = db.Column(db.DateTime, nullable = False)"""
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    user = db.relationship('User', backref=db.backref('chat_messages', lazy=True))
+    blog = db.relationship('Blog', backref=db.backref('chat_messages', lazy=True))
+
+    def __repr__(self):
+        return f"ChatMessage(id={self.id}, user_id={self.user_id}, blog_id={self.blog_id})"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_messages_for_blog(cls, blog_id, limit=50):
+        return cls.query.filter_by(blog_id=blog_id).order_by(cls.timestamp.desc()).limit(limit).all()
