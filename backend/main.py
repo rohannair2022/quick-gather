@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, session, render_template
-# Used to set up the API endpoints.
 from flask_restx import Api, Resource, fields, Namespace
 from config import DevConfig
 from models import Blog, User, User_info, ChatMessage
@@ -12,6 +11,7 @@ from auth import auth_ns
 from user import user_ns
 from flask_cors import CORS
 from flask_socketio import SocketIO,emit,join_room, leave_room
+from flask_mail import Mail, Message
 
 
 def create_config(config):
@@ -19,10 +19,9 @@ def create_config(config):
     app.config.from_object(config)
 
     db.init_app(app)
-    
-    #CORS(app)
 
     migrate = Migrate(app, db)
+    
     JWTManager(app) 
 
     # Generates Swagger Documentation / Helps builing RestFul services. 
@@ -43,7 +42,7 @@ def create_config(config):
     @app.shell_context_processor
     def make_shell_context():
 
-        return {"db":db, "Blog":Blog, "User":User, "User_info":User_info}
+        return {"db":db, "Blog":Blog, "User":User, "User_info":User_info, "ChatMessage":ChatMessage}
 
     return app
 
@@ -56,6 +55,9 @@ CORS(app,resources={r"/*":{"origins":"*"}})
 
 socketio = SocketIO(app,cors_allowed_origins="*")
 
+def create_mail():
+    mail = Mail(app)
+    return mail
 
 @socketio.on('join')
 def on_join(data):
