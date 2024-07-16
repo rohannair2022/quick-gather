@@ -1,9 +1,9 @@
 from models import User
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, url_for
 from flask_restx import Api, Resource, fields, Namespace
-
+from flask_mail import Message
 
 auth_ns = Namespace('auth', description="A namespace for our Authentication")
 
@@ -28,22 +28,50 @@ login_model = auth_ns.model(
 class Signup(Resource):
     @auth_ns.expect(signup_model)
     def post(self):
-        data = request.get_json() 
+        try:
+            # Lazy Import : Prevents circular import error.
+            from main import create_mail
 
-        username = data.get('username')
+            data = request.get_json() 
 
-        db_user = User.query.filter_by(username = username).first()
+            username = data.get('username')
+            db_user = User.query.filter_by(username = username).first()
 
-        if db_user is not None:
-            return jsonify({"message":"Username already exits."})
+            email = data.get('email')
+            db_email = User.query.filter_by(email = email).first()
 
-        new_user = User(username = data.get("username"), 
-                        email = data.get("email"), 
-                        password = generate_password_hash(data.get("password"))
-                    )
-        new_user.save()
+            if db_user is not None:
+                return jsonify({"message":"Username already exits."})
 
-        return jsonify({"message":"User Created"})
+            """if db_email is not None:
+                return jsonify({"message":"This email is already in use. Please try another email :)"})"""
+            # Generate confirmation token with user data
+            token_data = {
+                'username': username,
+                'email': data.get('email'),
+                'password': data.get('password')
+            }
+
+            mail, serializer = create_mail()
+
+            token = serializer.dumps(token_data, salt='email-confirm')
+
+            # Create confirmation link
+            confirm_url = url_for('confirm_email', token=token, _external=True)
+
+            # Send email
+            msg = Message('You are few steps away !! Confirm Your Email',
+                            sender='nairrohan151@gmail.com',
+                            recipients=[data.get('email')])
+            
+            msg.body = f'Click the following link to confirm your email and create your account:\n {confirm_url}'
+            mail.send(msg)
+            return jsonify({
+                "message": "Please check your email to confirm your account"
+                })
+        except:
+            return jsonify({"message": "Please check your email to confirm your account"}), 200
+
 
 @auth_ns.route('/login')
 class Login(Resource):

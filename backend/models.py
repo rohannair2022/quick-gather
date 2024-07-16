@@ -65,7 +65,7 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-# Table User: user_id, blog_id, blog_title, blog_travel, blog_mood 
+# Table User: user_id
 class User_info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, session, render_template
-from flask_restx import Api, Resource, fields, Namespace
+from flask import Flask, request, jsonify, session, render_template, current_app, make_response, url_for, redirect
+from flask_restx import Api
 from config import DevConfig
 from models import Blog, User, User_info, ChatMessage
 from exts import db
@@ -10,9 +10,9 @@ from blogs import blog_ns
 from auth import auth_ns
 from user import user_ns
 from flask_cors import CORS
-from flask_socketio import SocketIO,emit,join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_mail import Mail, Message
-
+from itsdangerous import URLSafeTimedSerializer
 
 def create_config(config):
     app = Flask(__name__)
@@ -22,42 +22,52 @@ def create_config(config):
 
     migrate = Migrate(app, db)
     
-    JWTManager(app) 
+    JWTManager(app)
 
-    # Generates Swagger Documentation / Helps builing RestFul services. 
-    """
-        Some Benefits of the API restx module is that it performs input validation and response marhsalling.
-        Something that flask alone cannot do. 
-        Marshal : Used to set the type of output 
-        Expect : Defines the type of input required. 
-    """
-    api = Api(app,doc='/docs')
-    # Namespace allows us to group related API endpoints together. 
+    mail = Mail(app)  # Initialize Mail here
 
+    api = Api(app, doc='/docs')
     api.add_namespace(blog_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(user_ns)
 
-    # Define the DB and Tables
     @app.shell_context_processor
     def make_shell_context():
+        return {"db": db, "Blog": Blog, "User": User, "User_info": User_info, "ChatMessage": ChatMessage}
 
-        return {"db":db, "Blog":Blog, "User":User, "User_info":User_info, "ChatMessage":ChatMessage}
+    return app, mail
 
-    return app
+app, mail = create_config(DevConfig)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-app = create_config(DevConfig)
-# CORS is important to bypass the browsers same-origin policy. Different ports are considered 
-# different origin regardless if they have the same URL. The browsers same - origin policy states 
-# that any data that is accessed or requested should come from the same URL. 
-CORS(app,resources={r"/*":{"origins":"*"}})
-
-socketio = SocketIO(app,cors_allowed_origins="*")
+serializer = URLSafeTimedSerializer('Thisisaveryscretkey!')
 
 def create_mail():
-    mail = Mail(app)
-    return mail
+    return [mail, serializer]
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        token_data = serializer.loads(token, salt='email-confirm', max_age=3600)  # 1 hour expiration
+    except:
+        frontend_url = "http://localhost:3000/signupFailure"
+        response = make_response(redirect(frontend_url))
+        return response
+
+    # Create new user
+    new_user = User(
+        username=token_data['username'],
+        email=token_data['email'],
+        password=generate_password_hash(token_data['password']),
+    )
+    new_user.save()
+
+    # Redirect to frontend with token
+    frontend_url = "http://localhost:3000/signupSuccess"
+    response = make_response(redirect(frontend_url))
+    return response
 
 @socketio.on('join')
 def on_join(data):
@@ -84,7 +94,7 @@ def on_leave(data):
 @socketio.on("message")
 def on_message(data):
     username = data['username']
-    room = data['room']  
+    room = data['room']
     message_text = data['message']
     
     user = User.query.filter_by(username=username).first()

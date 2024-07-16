@@ -20,6 +20,13 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO=True 
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    MAIL_SERVER=config('MAIL_SERVER')
+    MAIL_USERNAME=config('MAIL_USERNAME')
+    MAIL_PASSWORD=config('MAIL_PASSWORD')
+    MAIL_PORT=config('MAIL_PORT', cast=int)
+    MAIL_USE_TLS =config('MAIL_USE_TLS', cast=bool)
+    MAIL_USE_SSL = config('MAIL_USE_SSL', cast=bool, default=False)
+    MAIL_DEFAULT_SENDER = config('MAIL_DEFAULT_SENDER')
 
 class ProdConfig(Config): 
     pass
