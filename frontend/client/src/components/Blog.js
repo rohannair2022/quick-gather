@@ -9,11 +9,11 @@ const Blog = (props) => {
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.description}</Card.Text>
-        <Button variant="primary" onClick={props.handleshow1}>
+        <Button variant="primary" onClick={props.handleshowModal1}>
           Update
         </Button>{" "}
         <Button variant="danger" onClick={props.deleteBlog}>
-          Delete
+          Leave
         </Button>{" "}
         <Button
           style={{ backgroundColor: "orange", borderColor: "white" }}

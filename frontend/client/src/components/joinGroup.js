@@ -69,7 +69,7 @@ function JoinGroup() {
           <Form.Label>Id</Form.Label>
           <Form.Control
             type="text"
-            placeholder="id"
+            placeholder="Group id"
             style={{ width: 250 }}
             {...register("id", { required: true })}
           />

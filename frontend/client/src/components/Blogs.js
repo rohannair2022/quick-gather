@@ -56,13 +56,13 @@ const Blogs = () => {
 
   return (
     <div className="blogs" style={{ margin: 50 }}>
-      <h1>Create Blog</h1>
+      <h1>Create Group</h1>
       <form>
         <Form.Group>
           <Form.Label>Title</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Blog Title"
+            placeholder="Group Title"
             {...register("title", { required: true })}
           />
         </Form.Group>
@@ -71,7 +71,7 @@ const Blogs = () => {
           <Form.Label>Description</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Blog Description"
+            placeholder="Group Description"
             {...register("description", { required: true })}
           />
         </Form.Group>
@@ -123,11 +123,11 @@ const Blogs = () => {
         <br></br>
         <Form.Group>
           <Button as="sub" variant="primary" onClick={handleSubmit(submitForm)}>
-            Create Blog
+            Create Group
           </Button>
         </Form.Group>
         <Alert show={show} style={{ width: 250, background: "green" }}>
-          <p>'Blog : {serverResponse} has been created'</p>
+          <p>'Group : {serverResponse} has been created'</p>
           <hr />
           <div className="d-flex justify-content-start">
             <Button onClick={() => setShow(false)} variant="outline-success">
