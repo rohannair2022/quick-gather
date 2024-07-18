@@ -27,6 +27,8 @@ class DevConfig(Config):
     MAIL_USE_TLS =config('MAIL_USE_TLS', cast=bool)
     MAIL_USE_SSL = config('MAIL_USE_SSL', cast=bool, default=False)
     MAIL_DEFAULT_SENDER = config('MAIL_DEFAULT_SENDER')
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 class ProdConfig(Config): 
     pass

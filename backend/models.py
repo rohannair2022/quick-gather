@@ -20,9 +20,6 @@ class Blog(db.Model):
     id = db.Column(db.Integer(), primary_key = True)
     title = db.Column(db.String(30), nullable=False)
     description = db.Column(db.Text(), nullable=False)
-    mood = db.Column(db.String(30), nullable=False)
-    budget = db.Column(db.String(30), nullable=False)
-    travel = db.Column(db.String(30), nullable=False)
     users = db.relationship('User', secondary=user_channel, backref='blogs')
 
     def __repr__(self):
@@ -65,11 +62,11 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-# Table User: user_id
+# Table User: user_id, blog_id, blog_title, blog_travel, blog_mood 
 class User_info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=False)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'), nullable=True)
     blog_budget = db.Column(db.String(30), nullable=False)
     blog_travel = db.Column(db.String(30), nullable=False)
     blog_mood = db.Column(db.String(30), nullable=False)
@@ -109,7 +106,11 @@ class ChatMessage(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     @classmethod
     def get_messages_for_blog(cls, blog_id, limit=50):
-        return cls.query.filter_by(blog_id=blog_id).order_by(cls.timestamp.desc()).limit(limit).all()
+        return cls.query.filter_by(blog_id=blog_id).order_by(cls.timestamp).limit(limit).all()

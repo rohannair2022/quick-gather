@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields, Namespace
-from models import Blog, User, User_info
+from models import Blog, User, User_info, ChatMessage
 from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
@@ -63,9 +63,6 @@ class BlogsResource(Resource):
         new_blog = Blog(
             title = data.get('title'),
             description = data.get('description'),
-            budget = data.get('budget'),
-            travel = data.get('travel'),
-            mood = data.get('mood'),
         )
         new_blog.users.append(db_user)
         new_blog.save()
@@ -73,9 +70,9 @@ class BlogsResource(Resource):
         new_info = User_info(
             user_id = db_user.id,
             blog_id = new_blog.id,
-            blog_budget = new_blog.budget,
-            blog_travel = new_blog.travel,
-            blog_mood = new_blog.mood,
+            blog_budget = data.get('budget'),
+            blog_travel = data.get('travel'),
+            blog_mood = data.get('mood'),
         )
 
         new_info.save()
@@ -116,7 +113,10 @@ class BlogResource(Resource):
                 blog_to_delete.users.remove(i)
         
         if len(blog_to_delete.users) == 0:
+            ChatMessage.query.filter_by(blog_id=blog_to_delete.id).delete()
+            User_info.query.filter_by(blog_id=blog_to_delete.id).delete()
             blog_to_delete.delete()
+
 
         db.session.commit()
 

@@ -1,7 +1,7 @@
 from models import User
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Flask, request, jsonify, make_response, url_for
+from flask import Flask, request, jsonify, make_response, url_for, current_app
 from flask_restx import Api, Resource, fields, Namespace
 from flask_mail import Message
 
@@ -32,27 +32,22 @@ class Signup(Resource):
             # Lazy Import : Prevents circular import error.
             from main import create_mail
 
+            mail, serializer = create_mail()
+
             data = request.get_json() 
 
             username = data.get('username')
             db_user = User.query.filter_by(username = username).first()
 
-            email = data.get('email')
-            db_email = User.query.filter_by(email = email).first()
-
             if db_user is not None:
                 return jsonify({"message":"Username already exits."})
 
-            """if db_email is not None:
-                return jsonify({"message":"This email is already in use. Please try another email :)"})"""
             # Generate confirmation token with user data
             token_data = {
                 'username': username,
                 'email': data.get('email'),
                 'password': data.get('password')
             }
-
-            mail, serializer = create_mail()
 
             token = serializer.dumps(token_data, salt='email-confirm')
 
@@ -61,11 +56,11 @@ class Signup(Resource):
 
             # Send email
             msg = Message('You are few steps away !! Confirm Your Email',
-                            sender='nairrohan151@gmail.com',
-                            recipients=[data.get('email')])
-            
+                        sender='nairrohan151@gmail.com',
+                        recipients=[data.get('email')])
             msg.body = f'Click the following link to confirm your email and create your account:\n {confirm_url}'
             mail.send(msg)
+            
             return jsonify({
                 "message": "Please check your email to confirm your account"
                 })

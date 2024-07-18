@@ -52,7 +52,7 @@ def confirm_email(token):
     try:
         token_data = serializer.loads(token, salt='email-confirm', max_age=3600)  # 1 hour expiration
     except:
-        frontend_url = "http://localhost:3000/signupFailure"
+        frontend_url = "http://localhost:3000/Failure"
         response = make_response(redirect(frontend_url))
         return response
 
@@ -65,7 +65,7 @@ def confirm_email(token):
     new_user.save()
 
     # Redirect to frontend with token
-    frontend_url = "http://localhost:3000/signupSuccess"
+    frontend_url = "http://localhost:3000/Success"
     response = make_response(redirect(frontend_url))
     return response
 
