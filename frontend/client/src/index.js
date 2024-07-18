@@ -9,6 +9,9 @@ import Signup from "./components/Signup";
 import Blogs from "./components/Blogs";
 import JoinGroup from "./components/joinGroup";
 import Profile from "./components/user_profile";
+import Success from "./components/signupSuccess";
+import Failure from "./components/signupFailure";
+import { useAuth } from "./auth";
 
 const App = () => {
   return (
@@ -28,6 +31,8 @@ const App = () => {
           <Route path="/Signup" element={<Signup />} />
           <Route path="/JoinGroup" element={<JoinGroup />} />
           <Route path="/Profile" element={<Profile />} />
+          <Route path="/Failure" element={<Failure />} />
+          <Route path="/Success" element={<Success />} />
         </Routes>
       </div>
     </Router>

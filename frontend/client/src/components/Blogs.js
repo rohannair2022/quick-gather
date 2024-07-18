@@ -95,10 +95,10 @@ const Blogs = () => {
           <Form.Label>Budget</Form.Label>
           <Form.Select
             aria-label="Default select example"
-            placeholder="Select a Mood"
+            placeholder="Select a Budget"
             {...register("budget", { required: true })}
           >
-            <option>Select a Mood</option>
+            <option>Select a Budget</option>
             <option value="1">{`<50`}</option>
             <option value="2">{`50 - 500`}</option>
             <option value="3">{`500 - 2500`}</option>
@@ -110,10 +110,10 @@ const Blogs = () => {
           <Form.Label>Travel</Form.Label>
           <Form.Select
             aria-label="Default select example"
-            placeholder="Select a Mood"
+            placeholder="Select a Travel choice"
             {...register("travel", { required: true })}
           >
-            <option>Select a Mood</option>
+            <option>Select a Travel choice</option>
             <option value="1">Close By</option>
             <option value="2">Anywhere in the City</option>
             <option value="3">Outside the city within the country</option>

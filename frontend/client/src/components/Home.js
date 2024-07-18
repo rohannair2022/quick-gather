@@ -335,6 +335,9 @@ const LoggedinHome = () => {
           <Modal.Title>Group Name: {room}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>
+            Price: {} Mean Mood: {} Mean Travel Choice: {}{" "}
+          </p>
           <MessageList messages={messages} currentUser={username} room={room} />
           <Form onSubmit={messageRoom}>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
