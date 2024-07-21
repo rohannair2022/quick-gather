@@ -40,10 +40,10 @@ const Stats = (props) => {
         padding: "10px",
       }}
     >
-      <p>{mood}</p>
-      <p>{budget}</p>
-      <p>{number}</p>
-      <p>{travel}</p>
+      <p>Mood : {mood}</p>
+      <p>Budget : {budget}</p>
+      <p>Travel : {travel}</p>
+      <p>Members : {number}</p>
     </div>
   );
 };
