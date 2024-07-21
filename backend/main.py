@@ -45,14 +45,14 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 serializer = URLSafeTimedSerializer('Thisisaveryscretkey!')
 
 def create_mail():
-    return [mail, serializer]
+    return [app, mail, serializer]
 
 @app.route('/confirm/<token>')
 def confirm_email(token):
     try:
         token_data = serializer.loads(token, salt='email-confirm', max_age=3600)  # 1 hour expiration
     except:
-        frontend_url = "http://localhost:3000/Failure"
+        frontend_url = "/Failure"
         response = make_response(redirect(frontend_url))
         return response
 
@@ -65,7 +65,7 @@ def confirm_email(token):
     new_user.save()
 
     # Redirect to frontend with token
-    frontend_url = "http://localhost:3000/Success"
+    frontend_url = "/Success"
     response = make_response(redirect(frontend_url))
     return response
 
