@@ -14,7 +14,6 @@ user_channel = db.Table('user_chanel',
                         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
                         db.Column('blog_id', db.Integer(), db.ForeignKey('blog.id')))
 
-
 # Table Blog: id (primary), title, description
 class Blog(db.Model):
     id = db.Column(db.Integer(), primary_key = True)
@@ -42,11 +41,11 @@ class Blog(db.Model):
         db.session.delete(self)
         db.session.commit()
     
-    def update(self, title, description):
+    def update_content(self, title, description):
         self.title = title
         self.description = description 
         db.session.commit()
-
+    
 # Table User: id (primary), username, email, password 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
