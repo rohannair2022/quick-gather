@@ -6,6 +6,7 @@ import { Modal, Form, Button, Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import io from "socket.io-client";
 import { useRef } from "react";
+import Stats from "./Stats";
 const socket = io("http://127.0.0.1:5000", {});
 
 const LoggedinHome = () => {
@@ -335,9 +336,7 @@ const LoggedinHome = () => {
           <Modal.Title>Group Name: {room}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            Price: {} Mean Mood: {} Mean Travel Choice: {}{" "}
-          </p>
+          <Stats id={room} />
           <MessageList messages={messages} currentUser={username} room={room} />
           <Form onSubmit={messageRoom}>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import NavBar from "./components/NavBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./components/Home";
@@ -11,6 +11,7 @@ import JoinGroup from "./components/joinGroup";
 import Profile from "./components/user_profile";
 import Success from "./components/signupSuccess";
 import Failure from "./components/signupFailure";
+import Stats from "./components/Stats";
 import { useAuth } from "./auth";
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Failure" element={<Failure />} />
           <Route path="/Success" element={<Success />} />
+          <Route path="/Stats" element={<Stats />} />
         </Routes>
       </div>
     </Router>
