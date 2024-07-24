@@ -64,13 +64,14 @@ def process_signup(data):
             'username': username,
             'email': email,
             'password': password
-        }
+        } 
 
         token = serializer.dumps(token_data, salt='email-confirm')
 
         # Create confirmation link
         with app.test_request_context():
-            confirm_url = url_for('confirm_email', token=token, _external=True)
+            base_url = 'http://localhost:5000'  # or https:// if using SSL
+            confirm_url = f"{base_url}{url_for('confirm_email', token=token)}"
 
         # Send email
         msg = Message('You are few steps away !! Confirm Your Email',

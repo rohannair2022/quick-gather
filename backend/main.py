@@ -14,22 +14,21 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 
-def create_config(config):
+def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
 
     db.init_app(app)
-
     migrate = Migrate(app, db)
-    
     JWTManager(app)
-
-    mail = Mail(app)  # Initialize Mail here
+    mail = Mail(app)
 
     api = Api(app, doc='/docs')
     api.add_namespace(blog_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(user_ns)
+
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     @app.shell_context_processor
     def make_shell_context():
@@ -37,24 +36,25 @@ def create_config(config):
 
     return app, mail
 
-app, mail = create_config(DevConfig)
-CORS(app, resources={r"/*": {"origins": "*"}})
-
+app, mail = create_app(DevConfig)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-serializer = URLSafeTimedSerializer('Thisisaveryscretkey!')
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 def create_mail():
-    return [app, mail, serializer]
+    return app, mail, serializer
 
 @app.route('/confirm/<token>')
 def confirm_email(token):
     try:
         token_data = serializer.loads(token, salt='email-confirm', max_age=3600)  # 1 hour expiration
     except:
-        frontend_url = "/Failure"
-        response = make_response(redirect(frontend_url))
-        return response
+        return redirect("http://localhost:3000/Failure")
+
+    # Check if user already exists
+    existing_user = User.query.filter_by(username=token_data['username']).first()
+    if existing_user:
+        return redirect("http://localhost:3000/Failure")
 
     # Create new user
     new_user = User(
@@ -62,12 +62,10 @@ def confirm_email(token):
         email=token_data['email'],
         password=generate_password_hash(token_data['password']),
     )
-    new_user.save()
+    db.session.add(new_user)
+    db.session.commit()
 
-    # Redirect to frontend with token
-    frontend_url = "/Success"
-    response = make_response(redirect(frontend_url))
-    return response
+    return redirect("http://localhost:3000/Success")
 
 @socketio.on('join')
 def on_join(data):
@@ -103,7 +101,8 @@ def on_message(data):
     if user and blog:
         # Store the message
         new_message = ChatMessage(user_id=user.id, blog_id=blog.id, message=message_text)
-        new_message.save()
+        db.session.add(new_message)
+        db.session.commit()
         
         print(f'User {username} said: {message_text} in room {room}')
         
