@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
 
 const Blogs = () => {
@@ -54,89 +54,129 @@ const Blogs = () => {
       });
   };
 
+  const [isHoveredGroup, setIsHoveredGroup] = useState(false);
+
   return (
-    <div className="blogs" style={{ margin: 50 }}>
-      <h1>Create Group</h1>
-      <form>
-        <Form.Group>
-          <Form.Label>Title</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Group Title"
-            {...register("title", { required: true })}
+    <Container fluid className="py-3 py-md-5 mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} lg={6} className="text-center mt-5 mb-4 mb-lg-0">
+          <img
+            src={process.env.PUBLIC_URL + "/short_logo.png"}
+            alt="Short Logo"
+            className="img-fluid"
           />
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Group Description"
-            {...register("description", { required: true })}
-          />
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Mood</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            placeholder="Select a Mood"
-            {...register("mood", { required: true })}
-          >
-            <option>Select a Mood</option>
-            <option value="1">Chill</option>
-            <option value="2">Energetic</option>
-            <option value="3">Traditional</option>
-            <option value="4">Anything</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Budget</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            placeholder="Select a Budget"
-            {...register("budget", { required: true })}
-          >
-            <option>Select a Budget</option>
-            <option value="1">{`<50`}</option>
-            <option value="2">{`50 - 500`}</option>
-            <option value="3">{`500 - 2500`}</option>
-            <option value="4">No Budget</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Travel</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            placeholder="Select a Travel choice"
-            {...register("travel", { required: true })}
-          >
-            <option>Select a Travel choice</option>
-            <option value="1">Close By</option>
-            <option value="2">Anywhere in the City</option>
-            <option value="3">Outside the city within the country</option>
-            <option value="4">Outside the country</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Button as="sub" variant="primary" onClick={handleSubmit(submitForm)}>
-            Create Group
-          </Button>
-        </Form.Group>
-        <Alert show={show} style={{ width: 250, background: "green" }}>
-          <p>'Group : {serverResponse} has been created'</p>
-          <hr />
-          <div className="d-flex justify-content-start">
-            <Button onClick={() => setShow(false)} variant="outline-success">
-              Close me
-            </Button>
+        </Col>
+        <Col xs={12} lg={6} className="blog px-5">
+          <div className="blogs">
+            <h1>Create Group</h1>
+            <form>
+              <Form.Group>
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Group Title"
+                  {...register("title", { required: true })}
+                />
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Group Description"
+                  {...register("description", { required: true })}
+                />
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Mood</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Mood"
+                  {...register("mood", { required: true })}
+                >
+                  <option>Select a Mood</option>
+                  <option value="1">Chill</option>
+                  <option value="2">Energetic</option>
+                  <option value="3">Traditional</option>
+                  <option value="4">Anything</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Budget</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Budget"
+                  {...register("budget", { required: true })}
+                >
+                  <option>Select a Budget</option>
+                  <option value="1">{`<50`}</option>
+                  <option value="2">{`50 - 500`}</option>
+                  <option value="3">{`500 - 2500`}</option>
+                  <option value="4">No Budget</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Travel</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Travel choice"
+                  {...register("travel", { required: true })}
+                >
+                  <option>Select a Travel choice</option>
+                  <option value="1">Close By</option>
+                  <option value="2">Anywhere in the City</option>
+                  <option value="3">Outside the city within the country</option>
+                  <option value="4">Outside the country</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Button
+                  as="sub"
+                  variant="primary"
+                  onClick={handleSubmit(submitForm)}
+                  className="w-100 mb-3"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                    color: "white",
+                    backgroundColor: "#a3b899",
+                    border: "none",
+                    borderRadius: "5px",
+                    boxShadow: "5px 3px 0 #333",
+                    transition: "all 0.1s",
+                    cursor: "pointer",
+                    transform: isHoveredGroup ? "translateY(5px)" : "none",
+                  }}
+                  onMouseEnter={() => setIsHoveredGroup(true)}
+                  onMouseLeave={() => setIsHoveredGroup(false)}
+                >
+                  Create Group
+                </Button>
+              </Form.Group>
+              <Alert show={show} style={{ width: 250, background: "green" }}>
+                <p>'Group : {serverResponse} has been created'</p>
+                <hr />
+                <div className="d-flex justify-content-start">
+                  <Button
+                    onClick={() => setShow(false)}
+                    variant="outline-success"
+                  >
+                    Close me
+                  </Button>
+                </div>
+              </Alert>
+            </form>
           </div>
-        </Alert>
-      </form>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

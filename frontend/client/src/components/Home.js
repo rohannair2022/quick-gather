@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth";
 import Blog from "./Blog";
-import { Modal, Form, Button, Alert } from "react-bootstrap";
+import {
+  Modal,
+  Form,
+  Button,
+  Alert,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import io from "socket.io-client";
 import { useRef } from "react";
@@ -379,12 +387,93 @@ const LoggedinHome = () => {
 };
 
 const LoggedoutHome = () => {
+  const [isHoveredLogin, setIsHoveredLogin] = useState(false);
+  const [isHoveredSignup, setIsHoveredSignup] = useState(false);
   return (
-    <div className="home" style={{ marginTop: 50, marginLeft: 50 }}>
-      <h1>Home Page</h1>
-      <Link to="/Signup" className="btn btn-primary">
-        Signup Button
-      </Link>
+    <div>
+      <Container fluid className="home py-3 py-md-5 mt-5">
+        <Row className="justify-content-center">
+          <Col xs={12} lg={6} className="text-center mt-3 mb-4 mb-lg-0">
+            <img
+              src={process.env.PUBLIC_URL + "/short_logo.png"}
+              alt="Short Logo"
+              className="img-fluid"
+            />
+          </Col>
+          <Col xs={12} lg={6} className="text-left mt-4 px-5">
+            <Row className="justify-content-center">
+              <h1
+                className="title mt-5 mb-5"
+                style={{
+                  color: "#333",
+                }}
+              >
+                Welcome to QuickGather
+              </h1>
+              <h5 className="body mb-3">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </h5>
+            </Row>
+            <br></br>
+            <Row xs="auto" className="justify-content-left">
+              <Col>
+                <Link
+                  to="/Login"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                    color: "white",
+                    backgroundColor: "#B3CCF5",
+                    border: "none",
+                    borderRadius: "5px",
+                    boxShadow: "5px 3px 0 #333",
+                    transition: "all 0.1s",
+                    cursor: "pointer",
+                    transform: isHoveredLogin ? "translateY(5px)" : "none",
+                  }}
+                  onMouseEnter={() => setIsHoveredLogin(true)}
+                  onMouseLeave={() => setIsHoveredLogin(false)}
+                >
+                  Log-in
+                </Link>
+              </Col>
+              <Col>
+                <Link
+                  to="/Signup"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                    color: "white",
+                    backgroundColor: "#D5B895",
+                    border: "none",
+                    borderRadius: "5px",
+                    boxShadow: "5px 3px 0 #333",
+                    transition: "all 0.1s",
+                    cursor: "pointer",
+                    transform: isHoveredSignup ? "translateY(5px)" : "none",
+                  }}
+                  onMouseEnter={() => setIsHoveredSignup(true)}
+                  onMouseLeave={() => setIsHoveredSignup(false)}
+                >
+                  Singup
+                </Link>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };

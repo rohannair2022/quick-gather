@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 
 // We use Link to transition to the next component
@@ -92,125 +92,160 @@ const Signup = () => {
     }
   };
 
+  const [isHoveredSignup, setIsHoveredSignup] = useState(false);
+
   return (
-    <div className="signup" style={{ margin: 50 }}>
-      <div className="form">
-        <h1>Sign-up Page</h1>
-        {/*
+    <Container fluid className="py-3 py-md-5 mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} lg={6} className="text-center mt-5 mb-4 mb-lg-0 ">
+          <img
+            src={process.env.PUBLIC_URL + "/short_logo.png"}
+            alt="Short Logo"
+            className="img-fluid"
+          />
+        </Col>
+        <Col xs={12} lg={6}>
+          <div className="login p-3 p-md-5">
+            <div className="form">
+              <h1 className="mb-4">Sign-Up Page</h1>
+              {/*
           Alerts are a useful way to indicate that the sign-up was succesful or not. We use the predefined 
           style and functionality created by the react-bootstrap library. Notice that the onClick, sets the Show
           variable to false. This is to remove the pop up and not show it.     
         */}
-        <Alert show={show} variant="success" style={{ width: 250 }}>
-          <p>{serverResponse}</p>
-          <hr />
-          <div className="d-flex justify-content-start">
-            <Button onClick={() => setShow(false)} variant="outline-success">
-              Close me
-            </Button>
+              <Alert show={show} variant="success" style={{ width: 250 }}>
+                <p>{serverResponse}</p>
+                <hr />
+                <div className="d-flex justify-content-start">
+                  <Button
+                    onClick={() => setShow(false)}
+                    variant="outline-success"
+                  >
+                    Close me
+                  </Button>
+                </div>
+              </Alert>
+              <form>
+                <Form.Group className="mb-3">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Your Username"
+                    // Using the form hook -> var name, rules for the input
+                    {...register("username", {
+                      required: true,
+                      maxLenght: 25,
+                      minLength: 6,
+                    })}
+                  />
+                </Form.Group>
+                {errors.username && (
+                  <span style={{ color: "red" }}>Username Required</span>
+                )}
+                {errors.username?.type === "maxLength" && (
+                  <span style={{ color: "red" }}>
+                    {" "}
+                    max lenght of characters is 25
+                  </span>
+                )}
+                {errors.username?.type === "minLength" && (
+                  <span style={{ color: "red" }}>
+                    {" "}
+                    min lenght of characters is 6
+                  </span>
+                )}
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Your Email"
+                    {...register("email", { required: true, maxLenght: 80 })}
+                  />
+                </Form.Group>
+                {errors.email && (
+                  <span style={{ color: "red" }}>Email Required</span>
+                )}
+                <Form.Group className="mb-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Your Password"
+                    {...register("password", {
+                      required: true,
+                      maxLenght: 20,
+                      minLength: 6,
+                    })}
+                  />
+                </Form.Group>
+                {errors.password && (
+                  <span style={{ color: "red" }}>Password Required</span>
+                )}
+                {errors.password?.type === "maxLength" && (
+                  <span style={{ color: "red" }}>
+                    {" "}
+                    max lenght of characters is 20
+                  </span>
+                )}
+                {errors.password?.type === "minLength" && (
+                  <span style={{ color: "red" }}>
+                    {" "}
+                    min lenght of characters is 6
+                  </span>
+                )}
+                <Form.Group className="mb-3">
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Your Confirmed Password"
+                    {...register("confirm", {
+                      required: true,
+                      maxLenght: 20,
+                      minLength: 6,
+                    })}
+                  />
+                </Form.Group>
+                {errors.confirm && (
+                  <span style={{ color: "red" }}>Passwords do not match</span>
+                )}
+                <Form.Group className="mb-3">
+                  <Button
+                    as="sub"
+                    variant="primary"
+                    className="w-100 mb-3"
+                    onClick={handleSubmit(submitForm)}
+                    style={{
+                      display: "inline-block",
+                      padding: "10px 20px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      textDecoration: "none",
+                      color: "white",
+                      backgroundColor: "#D5B895",
+                      border: "none",
+                      borderRadius: "5px",
+                      boxShadow: "5px 3px 0 #333",
+                      transition: "all 0.1s",
+                      cursor: "pointer",
+                      transform: isHoveredSignup ? "translateY(5px)" : "none",
+                    }}
+                    onMouseEnter={() => setIsHoveredSignup(true)}
+                    onMouseLeave={() => setIsHoveredSignup(false)}
+                  >
+                    Sign-Up
+                  </Button>
+                </Form.Group>
+                <br></br>
+                <Form.Group>
+                  <small>
+                    Already have an account?<Link to="/login"> Log-in</Link>
+                  </small>
+                </Form.Group>
+              </form>
+            </div>
           </div>
-        </Alert>
-        <form>
-          <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              style={{ width: 250 }}
-              placeholder="Your Username"
-              // Using the form hook -> var name, rules for the input
-              {...register("username", {
-                required: true,
-                maxLenght: 25,
-                minLength: 6,
-              })}
-            />
-          </Form.Group>
-          {errors.username && (
-            <span style={{ color: "red" }}>Username Required</span>
-          )}
-          {errors.username?.type === "maxLength" && (
-            <span style={{ color: "red" }}>
-              {" "}
-              max lenght of characters is 25
-            </span>
-          )}
-          {errors.username?.type === "minLength" && (
-            <span style={{ color: "red" }}> min lenght of characters is 6</span>
-          )}
-          <br></br>
-          <Form.Group>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              style={{ width: 250 }}
-              placeholder="Your Email"
-              {...register("email", { required: true, maxLenght: 80 })}
-            />
-          </Form.Group>
-          {errors.email && <span style={{ color: "red" }}>Email Required</span>}
-          <br></br>
-          <Form.Group>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              style={{ width: 250 }}
-              placeholder="Your Password"
-              {...register("password", {
-                required: true,
-                maxLenght: 20,
-                minLength: 6,
-              })}
-            />
-          </Form.Group>
-          {errors.password && (
-            <span style={{ color: "red" }}>Password Required</span>
-          )}
-          {errors.password?.type === "maxLength" && (
-            <span style={{ color: "red" }}>
-              {" "}
-              max lenght of characters is 20
-            </span>
-          )}
-          {errors.password?.type === "minLength" && (
-            <span style={{ color: "red" }}> min lenght of characters is 6</span>
-          )}
-          <br></br>
-          <Form.Group>
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              style={{ width: 250 }}
-              placeholder="Your Confirmed Password"
-              {...register("confirm", {
-                required: true,
-                maxLenght: 20,
-                minLength: 6,
-              })}
-            />
-          </Form.Group>
-          {errors.confirm && (
-            <span style={{ color: "red" }}>Passwords do not match</span>
-          )}
-          <br></br>
-          <Form.Group>
-            <Button
-              as="sub"
-              variant="primary"
-              style={{ background: "#333" }}
-              onClick={handleSubmit(submitForm)}
-            >
-              Sign-Up
-            </Button>
-          </Form.Group>
-          <br></br>
-          <Form.Group>
-            <small>
-              Already have an account?<Link to="/login"> Log-in</Link>
-            </small>
-          </Form.Group>
-        </form>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

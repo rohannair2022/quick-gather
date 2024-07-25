@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Container, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -52,64 +52,94 @@ const Login = () => {
         }
       });
   };
+
+  const [isHoveredLogin, setIsHoveredLogin] = useState(false);
+
   return (
-    <div className="login" style={{ margin: 50 }}>
-      <div className="form">
-        <h1>Log-In Page</h1>
-        <form>
-          <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              style={{ width: 250 }}
-              placeholder="Your Username"
-              {...register("username", { required: true })}
-            />
-          </Form.Group>
-          {errors.username && (
-            <span style={{ color: "red" }}>Username Required</span>
-          )}
-          <br></br>
-          <Form.Group>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              style={{ width: 250 }}
-              placeholder="Your Password"
-              {...register("password", { required: true })}
-            />
-          </Form.Group>
-          {errors.password && (
-            <span style={{ color: "red" }}>Password Required</span>
-          )}
-          <br></br>
-          <Alert show={show} style={{ width: 250, background: "red" }}>
-            <p>{serverResponse}</p>
-            <hr />
-            <div className="d-flex justify-content-start">
-              <Button onClick={() => setShow(false)} variant="outline-success">
-                Close me
+    <Container fluid className="py-3 py-md-5 mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} lg={6} className="text-center mt-3 mb-4 mb-lg-0">
+          <img
+            src={process.env.PUBLIC_URL + "/short_logo.png"}
+            alt="Short Logo"
+            className="img-fluid"
+          />
+        </Col>
+        <Col xs={12} lg={6}>
+          <div className="login p-3 p-md-5">
+            <h1 className="mb-4">Log-In Page</h1>
+            <Form onSubmit={handleSubmit(submitForm)}>
+              <Form.Group className="mb-3">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Your Username"
+                  {...register("username", { required: true })}
+                />
+                {errors.username && (
+                  <Form.Text className="text-danger">
+                    Username Required
+                  </Form.Text>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Your Password"
+                  {...register("password", { required: true })}
+                />
+                {errors.password && (
+                  <Form.Text className="text-danger">
+                    Password Required
+                  </Form.Text>
+                )}
+              </Form.Group>
+
+              <Alert
+                show={show}
+                variant="danger"
+                onClose={() => setShow(false)}
+                dismissible
+              >
+                <Alert.Heading>Login Attempt</Alert.Heading>
+                <p>{serverResponse}</p>
+              </Alert>
+
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-100 mb-3"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                  color: "white",
+                  backgroundColor: "#B3CCF5",
+                  border: "none",
+                  borderRadius: "5px",
+                  boxShadow: "5px 3px 0 #333",
+                  transition: "all 0.1s",
+                  cursor: "pointer",
+                  transform: isHoveredLogin ? "translateY(5px)" : "none",
+                }}
+                onMouseEnter={() => setIsHoveredLogin(true)}
+                onMouseLeave={() => setIsHoveredLogin(false)}
+              >
+                Login
               </Button>
-            </div>
-          </Alert>
-          <Form.Group>
-            <Button
-              as="sub"
-              variant="primary"
-              onClick={handleSubmit(submitForm)}
-            >
-              Login
-            </Button>
-          </Form.Group>
-          <br></br>
-          <Form.Group>
-            <small>
-              Do not have an account?<Link to="/signup"> Sign-up</Link>{" "}
-            </small>
-          </Form.Group>
-        </form>
-      </div>
-    </div>
+
+              <Form.Text className="text-muted">
+                Don't have an account? <Link to="/signup">Sign-up</Link>
+              </Form.Text>
+            </Form>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

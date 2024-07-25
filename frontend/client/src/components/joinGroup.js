@@ -1,10 +1,6 @@
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
+import { Form, Button, Alert, Container, Col, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { Alert } from "react-bootstrap";
 
 function JoinGroup() {
   const {
@@ -61,85 +57,119 @@ function JoinGroup() {
       });
   };
 
-  return (
-    <div className="signup" style={{ margin: 50 }}>
-      <h1>Join a Group</h1>
-      <Form>
-        <Form.Group className="mb-3" controlId="formHorizontalEmail">
-          <Form.Label>Id</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Group id"
-            style={{ width: 250 }}
-            {...register("id", { required: true })}
-          />
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Mood</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            placeholder="Select a Mood"
-            style={{ width: 250 }}
-            {...register("mood", { required: true })}
-          >
-            <option>Select a Mood</option>
-            <option value="1">Chill</option>
-            <option value="2">Energetic</option>
-            <option value="3">Traditional</option>
-            <option value="4">Anything</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Budget</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            placeholder="Select a Mood"
-            style={{ width: 250 }}
-            {...register("budget", { required: true })}
-          >
-            <option>Select a Mood</option>
-            <option value="1">{`<50`}</option>
-            <option value="2">{`50 - 500`}</option>
-            <option value="3">{`500 - 2500`}</option>
-            <option value="4">No Budget</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
-        <Form.Group>
-          <Form.Label>Travel</Form.Label>
-          <Form.Select
-            style={{ width: 250 }}
-            aria-label="Default select example"
-            placeholder="Select a Mood"
-            {...register("travel", { required: true })}
-          >
-            <option>Select a Mood</option>
-            <option value="1">Close By</option>
-            <option value="2">Anywhere in the City</option>
-            <option value="3">Outside the city within the country</option>
-            <option value="4">Outside the country</option>
-          </Form.Select>
-        </Form.Group>
-        <br></br>
+  const [isHoveredGroup, setIsHoveredGroup] = useState(false);
 
-        <Form.Group className="mb-3">
-          <Button type="submit" onClick={handleSubmit(submitForm)}>
-            Join Group
-          </Button>
-        </Form.Group>
-        <Alert show={show} style={{ width: 250, background: `${color}` }}>
-          <p>'{serverResponse}'</p>
-          <hr />
-          <div className="d-flex justify-content-start">
-            <Button onClick={() => setShow(false)} variant="outline-success">
-              Close me
-            </Button>
+  return (
+    <Container fluid className="py-3 py-md-5 mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} lg={6} className="text-center mt-5 mb-4 mb-lg-0">
+          <img
+            src={process.env.PUBLIC_URL + "/short_logo.png"}
+            alt="Short Logo"
+            className="img-fluid"
+          />
+        </Col>
+        <Col xs={12} lg={6} className="blog px-5">
+          <div className="signup">
+            <h1 className="title mb-3">Join a Group</h1>
+            <Form>
+              <Form.Group className="mb-3" controlId="formHorizontalEmail">
+                <Form.Label>Id</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Group id"
+                  {...register("id", { required: true })}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Mood</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Mood"
+                  {...register("mood", { required: true })}
+                >
+                  <option>Select a Mood</option>
+                  <option value="1">Chill</option>
+                  <option value="2">Energetic</option>
+                  <option value="3">Traditional</option>
+                  <option value="4">Anything</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Budget</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Mood"
+                  {...register("budget", { required: true })}
+                >
+                  <option>Select a Mood</option>
+                  <option value="1">{`<50`}</option>
+                  <option value="2">{`50 - 500`}</option>
+                  <option value="3">{`500 - 2500`}</option>
+                  <option value="4">No Budget</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Travel</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  placeholder="Select a Mood"
+                  {...register("travel", { required: true })}
+                >
+                  <option>Select a Mood</option>
+                  <option value="1">Close By</option>
+                  <option value="2">Anywhere in the City</option>
+                  <option value="3">Outside the city within the country</option>
+                  <option value="4">Outside the country</option>
+                </Form.Select>
+              </Form.Group>
+              <br></br>
+
+              <Form.Group className="mb-3">
+                <Button
+                  type="submit"
+                  onClick={handleSubmit(submitForm)}
+                  className="w-100 mb-3"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    textDecoration: "none",
+                    color: "white",
+                    backgroundColor: "#a3b899",
+                    border: "none",
+                    borderRadius: "5px",
+                    boxShadow: "5px 3px 0 #333",
+                    transition: "all 0.1s",
+                    cursor: "pointer",
+                    transform: isHoveredGroup ? "translateY(5px)" : "none",
+                  }}
+                  onMouseEnter={() => setIsHoveredGroup(true)}
+                  onMouseLeave={() => setIsHoveredGroup(false)}
+                >
+                  Join Group
+                </Button>
+              </Form.Group>
+              <Alert show={show} style={{ background: `${color}` }}>
+                <p>'{serverResponse}'</p>
+                <hr />
+                <div className="d-flex justify-content-start">
+                  <Button
+                    onClick={() => setShow(false)}
+                    variant="outline-success"
+                  >
+                    Close me
+                  </Button>
+                </div>
+              </Alert>
+            </Form>
           </div>
-        </Alert>
-      </Form>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
