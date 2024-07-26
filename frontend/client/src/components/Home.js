@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import io from "socket.io-client";
 import { useRef } from "react";
 import Stats from "./Stats";
+import Profile from "./user_profile";
 const socket = io("http://127.0.0.1:5000", {});
 
 const LoggedinHome = () => {
@@ -271,118 +272,140 @@ const LoggedinHome = () => {
   };
 
   return (
-    <div style={{ margin: 50 }}>
-      <h1>Groups Joined</h1>
+    <Container fluid className="py-3 py-md-5 mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} lg={9} className="mb-4 mb-lg-0">
+          <div style={{ margin: 50 }}>
+            {/* 1: The modal for the Update Button */}
 
-      {/* 1: The modal for the Update Button */}
+            <Modal show={showModal1} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Update Blog</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label>New Title</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Your Title"
+                      {...register("title", { required: true })}
+                    />
+                  </Form.Group>
+                  {errors.title && (
+                    <span style={{ color: "red" }}>Title Required</span>
+                  )}
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlTextarea1"
+                  >
+                    <Form.Label>New Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Your Description"
+                      {...register("description", { required: true })}
+                    />
+                  </Form.Group>
+                  {errors.description && (
+                    <span style={{ color: "red" }}>Description Required</span>
+                  )}
+                </Form>
+                <Alert show={show} style={{ width: 250, background: "green" }}>
+                  <p>{serverResponse}</p>
+                  <hr />
+                  <div className="d-flex justify-content-start">
+                    <Button
+                      onClick={() => setShow(false)}
+                      variant="outline-success"
+                    >
+                      Close me
+                    </Button>
+                  </div>
+                </Alert>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={handleSubmit(submitForm)}>
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+            </Modal>
 
-      <Modal show={showModal1} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Update Blog</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>New Title</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Your Title"
-                {...register("title", { required: true })}
-              />
-            </Form.Group>
-            {errors.title && (
-              <span style={{ color: "red" }}>Title Required</span>
-            )}
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+            {/* 2: The modal for the Chat Button */}
+
+            <Modal
+              show={showModal2}
+              onHide={() => {
+                console.log("Modal closing");
+                setshowModal2(false);
+                leaveRoom();
+                // Don't clear all messages, just leave the room
+              }}
             >
-              <Form.Label>New Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Your Description"
-                {...register("description", { required: true })}
-              />
-            </Form.Group>
-            {errors.description && (
-              <span style={{ color: "red" }}>Description Required</span>
-            )}
-          </Form>
-          <Alert show={show} style={{ width: 250, background: "green" }}>
-            <p>{serverResponse}</p>
-            <hr />
-            <div className="d-flex justify-content-start">
-              <Button onClick={() => setShow(false)} variant="outline-success">
-                Close me
-              </Button>
-            </div>
-          </Alert>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit(submitForm)}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+              <Modal.Header closeButton>
+                <Modal.Title>Group Name: {room}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Stats id={room} />
+                <MessageList
+                  messages={messages}
+                  currentUser={username}
+                  room={room}
+                />
+                <Form onSubmit={messageRoom}>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Control
+                      type="text"
+                      placeholder="Your Message"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group>
+                    <Button type="submit" variant="primary">
+                      Send Message
+                    </Button>
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+            </Modal>
 
-      {/* 2: The modal for the Chat Button */}
-
-      <Modal
-        show={showModal2}
-        onHide={() => {
-          console.log("Modal closing");
-          setshowModal2(false);
-          leaveRoom();
-          // Don't clear all messages, just leave the room
-        }}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Group Name: {room}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Stats id={room} />
-          <MessageList messages={messages} currentUser={username} room={room} />
-          <Form onSubmit={messageRoom}>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Control
-                type="text"
-                placeholder="Your Message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Button type="submit" variant="primary">
-                Send Message
-              </Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
-      {blogs.map((blog, index) => (
-        <div>
-          <Blog
-            title={blog.title}
-            id={blog.id}
-            key={index}
-            description={blog.description}
-            handleshowModal1={() => {
-              handleshowModal1(blog.id);
-            }}
-            deleteBlog={() => deleteBlog(blog.id)}
-            startChat={() => {
-              setRoom(blog.id);
-              setshowModal2(true);
-            }}
-          />
-        </div>
-      ))}
-    </div>
+            {blogs.map((blog, index) => (
+              <div>
+                <Blog
+                  title={blog.title}
+                  id={blog.id}
+                  key={index}
+                  description={blog.description}
+                  handleshowModal1={() => {
+                    handleshowModal1(blog.id);
+                  }}
+                  deleteBlog={() => deleteBlog(blog.id)}
+                  startChat={() => {
+                    setRoom(blog.id);
+                    setshowModal2(true);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </Col>
+        <Col xs={12} lg={3} className="text-center">
+          <div style={{ margin: 50 }}>
+            <Profile />
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

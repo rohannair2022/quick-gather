@@ -29,14 +29,6 @@ function LoggedInLinks() {
         Join Group
       </Link>
 
-      <Link
-        to="/profile"
-        className="nav-link px-4"
-        style={{ fontWeight: "bold" }}
-      >
-        Update Profile
-      </Link>
-
       <a
         href="/"
         onClick={logout}

@@ -2,9 +2,9 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Profile() {
   const {
@@ -13,6 +13,7 @@ function Profile() {
     formState: { errors },
   } = useForm();
 
+  const [path, setPath] = useState("");
   const [show, setShow] = useState(false);
   const [serverResponse, setServerResponse] = useState("");
 
@@ -37,37 +38,74 @@ function Profile() {
       .then((response) => response.json())
       .then((data) => {
         setShow(true);
-        serverResponse(data.message);
+        setServerResponse(data.message);
       })
       .catch((error) => {
         setShow(true);
-        serverResponse(data.error);
+        setServerResponse("An error Occured");
       });
   };
 
+  const getPic = () => {
+    const username = JSON.parse(localStorage.getItem("username"));
+    const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+
+    const requestOptionsGet = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+        "content-type": "application/json",
+      },
+    };
+
+    fetch(`/user/uploadpic?username=${username.name}`, requestOptionsGet)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.image_path);
+        setPath(data.image_path);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile picture:", error);
+      });
+  };
+
+  useEffect(() => {
+    getPic();
+  }, []);
+
   return (
     <>
-      <Form.Group controlId="formFile" className="mb-3">
-        <Form.Label>Default file input example</Form.Label>
-        <Form.Control
-          type="file"
-          {...register("profile_pic", { required: true })}
-        />
-      </Form.Group>
-      <Form.Group>
-        <Button as="sub" variant="primary" onClick={handleSubmit(uploadPic)}>
-          Upload New Profile Pic
-        </Button>
-      </Form.Group>
-      <Alert show={show} style={{ width: 250, background: "red" }}>
-        <p>{serverResponse}</p>
-        <hr />
-        <div className="d-flex justify-content-start">
-          <Button onClick={() => setShow(false)} variant="outline-success">
-            Close me
-          </Button>
-        </div>
-      </Alert>
+      <Card style={{ width: "18rem" }}>
+        <Card.Img variant="top" src={path} />
+        <Card.Body>
+          <Form.Group controlId="formFile">
+            <Form.Label>Update Profile pic</Form.Label>
+            <Form.Control
+              className="mb-3"
+              type="file"
+              {...register("profile_pic", { required: true })}
+            />
+          </Form.Group>
+          <Form.Group className="button">
+            <Button
+              as="sub"
+              variant="primary"
+              onClick={handleSubmit(uploadPic)}
+            >
+              Upload New Profile Pic
+            </Button>
+          </Form.Group>
+          <Alert show={show} style={{ width: 250, background: "red" }}>
+            <p>{serverResponse}</p>
+            <hr />
+            <div className="d-flex justify-content-start">
+              <Button onClick={() => setShow(false)} variant="outline-success">
+                Close me
+              </Button>
+            </div>
+          </Alert>
+        </Card.Body>
+      </Card>
     </>
   );
 }

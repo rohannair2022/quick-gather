@@ -234,7 +234,6 @@ const Signup = () => {
                     Sign-Up
                   </Button>
                 </Form.Group>
-                <br></br>
                 <Form.Group>
                   <small>
                     Already have an account?<Link to="/login"> Log-in</Link>
