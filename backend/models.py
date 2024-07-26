@@ -7,6 +7,7 @@ from exts import db
 # db.drop_all()
 # db.create_all()
 from datetime import datetime
+from decouple import config
 
 # addtionally migrate the chnages using flask db upgrade
 
@@ -52,7 +53,7 @@ class User(db.Model):
     username = db.Column(db.String(25), unique=True, nullable=False)
     email = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    picture = db.Column(db.String(255), nullable=False, default='images/default.jpg')
+    picture = db.Column(db.String(255), nullable=False, default=f'https://{config("S3_BUCKET")}.s3.amazonaws.com/default.jpg')
     
     def __repr__(self):
         return f"User {self.username}"

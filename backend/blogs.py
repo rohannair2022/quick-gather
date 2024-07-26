@@ -126,6 +126,13 @@ class BlogResource(Resource):
         db_user_info.delete()
 
         return blog_to_delete
+
+@blog_ns.route('/users/<int:id>')
+class BlogResource(Resource):
+    @jwt_required()
+    def get(self, id): 
+        blog = Blog.query.get_or_404(id)
+        return [user.picture for user in blog.users]
     
 
 @blog_ns.route('/join/<int:id>')
