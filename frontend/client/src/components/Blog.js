@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
 import { useState } from "react";
+import ProfileCol from "./profileCol";
 
 const Blog = (props) => {
   const [isHoveredUpdate, setIsHoveredUpdate] = useState(false);
@@ -12,9 +13,9 @@ const Blog = (props) => {
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.description}</Card.Text>
-        <Container fluid className="cont">
-          <Row xs="auto" className="justify-content-left">
-            <Col className="px-2 mb-3">
+        <Container fluid className="cont mb-3">
+          <Row xs={12} lg="auto" className="justify-content-left">
+            <Col className="ps-0 pe-2 mb-3">
               <Button
                 variant="primary"
                 onClick={props.handleshowModal1}
@@ -90,6 +91,7 @@ const Blog = (props) => {
             </Col>
           </Row>
         </Container>
+        <ProfileCol id={props.id} />
       </Card.Body>
     </Card>
   );

@@ -379,24 +379,33 @@ const LoggedinHome = () => {
               </Modal.Body>
             </Modal>
 
-            {blogs.map((blog, index) => (
-              <div>
-                <Blog
-                  title={blog.title}
-                  id={blog.id}
-                  key={index}
-                  description={blog.description}
-                  handleshowModal1={() => {
-                    handleshowModal1(blog.id);
-                  }}
-                  deleteBlog={() => deleteBlog(blog.id)}
-                  startChat={() => {
-                    setRoom(blog.id);
-                    setshowModal2(true);
-                  }}
-                />
+            {blogs.length > 0 ? (
+              blogs.map((blog, index) => (
+                <div key={index}>
+                  <Blog
+                    title={blog.title}
+                    id={blog.id}
+                    description={blog.description}
+                    handleshowModal1={() => {
+                      handleshowModal1(blog.id);
+                    }}
+                    deleteBlog={() => deleteBlog(blog.id)}
+                    startChat={() => {
+                      setRoom(blog.id);
+                      setshowModal2(true);
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="no-blogs-message">
+                <h3>No Groups available</h3>
+                <p>
+                  There are currently no groups to display. Why not create or
+                  join one?
+                </p>
               </div>
-            ))}
+            )}
           </div>
         </Col>
         <Col xs={12} lg={3} className="text-center">
@@ -434,13 +443,16 @@ const LoggedoutHome = () => {
                 Welcome to QuickGather
               </h1>
               <h5 className="body mb-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                QuickGather is an innovative social media platform enhanced by
+                AI, designed to streamline event planning with your friends,
+                regardless of the event's size. Users have the flexibility to
+                create or join groups, specifying their mood, budget, and travel
+                distance preferences. Leveraging advanced algorithms,
+                QuickGather predicts the most suitable factors and recommends
+                activities tailored to these preferences. Whether organizing a
+                casual get-together or a large gathering, QuickGather simplifies
+                the process, ensuring personalized and enjoyable experiences for
+                everyone involved.
               </h5>
             </Row>
             <br></br>

@@ -78,6 +78,7 @@ function Profile() {
       <Card style={{ width: "18rem" }}>
         <Card.Img variant="top" src={path} />
         <Card.Body>
+          <h5>{JSON.parse(localStorage.getItem("username")).name}</h5>
           <Form.Group controlId="formFile">
             <Form.Label>Update Profile pic</Form.Label>
             <Form.Control
