@@ -3,8 +3,6 @@ from decouple import config
 import os 
 from datetime import timedelta
 
-
-
 # Gives us the path to ....IWillBeThere/backend
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -27,8 +25,9 @@ class DevConfig(Config):
     MAIL_USE_TLS =config('MAIL_USE_TLS', cast=bool)
     MAIL_USE_SSL = config('MAIL_USE_SSL', cast=bool, default=False)
     MAIL_DEFAULT_SENDER = config('MAIL_DEFAULT_SENDER')
-    CELERY_BROKER_URL = 'redis://localhost:6379/0'
-    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    AWS_ACCESS_KEY_ID=config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY=config('AWS_SECRET_ACCESS_KEY')
+
 
 class ProdConfig(Config): 
     pass
