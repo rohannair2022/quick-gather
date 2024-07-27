@@ -79,8 +79,8 @@ export default function NavBar() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "#333",
         opacity: 0.6,
+        background: "#c19a6b",
       }}
     >
       <Container className="d-flex justify-content-center">
@@ -99,7 +99,7 @@ export default function NavBar() {
           transition: color 0.2s ease-in-out;
         }
         .nav-link:hover {
-          color: #111 !important;
+          color: #333 !important;
         }
         .navbar {
           padding: 1rem;
