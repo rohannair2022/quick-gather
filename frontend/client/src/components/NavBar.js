@@ -5,8 +5,10 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { logout, useAuth } from "../auth";
+import { useState } from "react";
 
 function LoggedInLinks() {
+  const [logoutHover, setlogoutHover] = useState(false);
   return (
     <>
       <Link to="/" className="nav-link px-4" style={{ fontWeight: "bold" }}>
@@ -29,14 +31,16 @@ function LoggedInLinks() {
         Join Group
       </Link>
 
-      <a
-        href="/"
-        onClick={logout}
-        className="nav-link"
+      <Link
+        to="/"
+        className="nav-link px-4"
+        onMouseEnter={() => setlogoutHover(true)}
+        onMouseDown={() => setlogoutHover(false)}
         style={{ fontWeight: "bold" }}
+        onClick={logout}
       >
-        Log-Out
-      </a>
+        Log-out
+      </Link>
     </>
   );
 }
