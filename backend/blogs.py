@@ -131,8 +131,14 @@ class BlogResource(Resource):
 class BlogResource(Resource):
     @jwt_required()
     def get(self, id): 
-        blog = Blog.query.get_or_404(id)
-        return [user.picture for user in blog.users]
+        def find_picture(user_id:User_info)-> str:
+            user = User.query.filter_by(id = user_id.user_id).first()
+            return user.picture
+        def find_username(user_id:User_info)->str:
+            user = User.query.filter_by(id = user_id.user_id).first()
+            return user.username
+        users_id = User_info.query.filter_by(blog_id = id).all()
+        return [[user_id.blog_mood, user_id.blog_budget, user_id.blog_travel, find_picture(user_id), find_username(user_id)] for user_id in users_id]
     
 
 @blog_ns.route('/join/<int:id>')
