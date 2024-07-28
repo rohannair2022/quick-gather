@@ -103,6 +103,7 @@ class BlogResource(Resource):
         blog_to_delete = Blog.query.get_or_404(id)
         data = request.get_json()
         db_user =  User.query.filter_by(username = data.get('username')).first()
+
         user_id = db_user.id
         blog_id = blog_to_delete.id
 
@@ -119,11 +120,10 @@ class BlogResource(Resource):
             User_info.query.filter_by(blog_id=blog_to_delete.id).delete()
             blog_to_delete.delete()
 
-
-        db.session.commit()
-
         db_user_info = User_info.query.filter_by(user_id = user_id, blog_id = blog_id)
         db_user_info.delete()
+
+        db.session.commit()
 
         return blog_to_delete
 
