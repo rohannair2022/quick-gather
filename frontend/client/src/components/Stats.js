@@ -36,14 +36,22 @@ const Stats = (props) => {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "auto auto auto auto",
+        gridTemplateColumns: "auto auto",
         padding: "10px",
       }}
     >
-      <p>Mood : {mood}</p>
-      <p>Budget : {budget}</p>
-      <p>Travel : {travel}</p>
-      <p>Members : {number}</p>
+      <p>
+        <strong>Mood :</strong> {mood}
+      </p>
+      <p>
+        <strong>Budget :</strong> {budget}
+      </p>
+      <p>
+        <strong>Travel :</strong> {travel}
+      </p>
+      <p>
+        <strong>Members :</strong> {number}
+      </p>
     </div>
   );
 };

@@ -11,9 +11,15 @@ const DisplayProfile = (props) => {
           <Card.Img variant="top" src={props.picture} />
           <Card.Body>
             <Card.Text>
-              <h6>Mood: {props.mood}</h6>
-              <h6>Budget: {props.budget}</h6>
-              <h6>Travel: {props.travel}</h6>
+              <p>
+                <strong>Mood :</strong> {props.mood}
+              </p>
+              <p>
+                <strong>Budget :</strong> {props.budget}
+              </p>
+              <p>
+                <strong>Travel :</strong> {props.travel}
+              </p>
             </Card.Text>
           </Card.Body>
         </Card>
