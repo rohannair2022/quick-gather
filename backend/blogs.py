@@ -9,6 +9,11 @@ from statistics import mode
 
 blog_ns = Namespace('blog', description="A namespace for blog")
 
+blog_stats_mood = {1: "Chill", 2:"Energetic", 3:"Traditional", 4:"Anything"}
+blog_stats_budget = {1:"<50", 2:"50-500", 3:"500-2500", 4:"No budget"}
+blog_stats_travel = {1:"Near by", 2:"City", 3:"Country", 4:"International"}
+
+
 blog_model = blog_ns.model(
     "Blog",
     {
@@ -138,7 +143,11 @@ class BlogResource(Resource):
             user = User.query.filter_by(id = user_id.user_id).first()
             return user.username
         users_id = User_info.query.filter_by(blog_id = id).all()
-        return [[user_id.blog_mood, user_id.blog_budget, user_id.blog_travel, find_picture(user_id), find_username(user_id)] for user_id in users_id]
+        return [[blog_stats_mood[int(user_id.blog_mood)], 
+                 blog_stats_budget[int(user_id.blog_budget)],
+                 blog_stats_travel[int(user_id.blog_travel)], 
+                 find_picture(user_id), 
+                 find_username(user_id)] for user_id in users_id]
     
 
 @blog_ns.route('/join/<int:id>')
@@ -173,14 +182,14 @@ class BlogResource(Resource):
             blog_to_stat = Blog.query.get(int(id))
             users = User_info.query.filter_by(blog_id=blog_to_stat.id).all()
 
-            budgets = [float(user.blog_budget) for user in users]  # Convert to float
-            moods = [user.blog_mood for user in users]
+            budgets = [int(user.blog_budget) for user in users]  # Convert to float
+            moods = [int(user.blog_mood) for user in users]
             travels = [int(user.blog_travel) for user in users]  # Convert to int
 
             count_num = len(users)
-            min_budget = min(budgets)
-            most_common_mood = mode(moods)
-            avg_travel = round(sum(travels) / count_num) if count_num > 0 else 0
+            min_budget = blog_stats_budget[min(budgets)]
+            most_common_mood = blog_stats_mood.get(mode(moods))
+            avg_travel = blog_stats_travel[round(sum(travels) / count_num) if count_num > 0 else 0]
 
             return {
                 "message": "Success",
