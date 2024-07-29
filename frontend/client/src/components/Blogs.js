@@ -133,6 +133,15 @@ const Blogs = () => {
                 </Form.Select>
               </Form.Group>
               <br></br>
+              <Alert
+                show={show}
+                variant="success"
+                onClose={() => setShow(false)}
+                dismissible
+              >
+                <Alert.Heading>Blog Message</Alert.Heading>
+                <p>{serverResponse}</p>
+              </Alert>
               <Form.Group>
                 <Button
                   as="sub"
@@ -160,18 +169,6 @@ const Blogs = () => {
                   Create Group
                 </Button>
               </Form.Group>
-              <Alert show={show} style={{ width: 250, background: "green" }}>
-                <p>'Group : {serverResponse} has been created'</p>
-                <hr />
-                <div className="d-flex justify-content-start">
-                  <Button
-                    onClick={() => setShow(false)}
-                    variant="outline-success"
-                  >
-                    Close me
-                  </Button>
-                </div>
-              </Alert>
             </form>
           </div>
         </Col>
