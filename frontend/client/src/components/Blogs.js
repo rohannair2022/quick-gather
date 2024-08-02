@@ -47,6 +47,20 @@ const Blogs = () => {
     setHours([...hours, dayjs().set("hour", 10).set("minute", 0)]);
   };
 
+  const deleteDate = () => {
+    if (dates.length > 1) {
+      setNumdates(numdates - 1);
+      setDates((prevDates) => prevDates.slice(0, -1));
+      setHours((prevHours) => prevHours.slice(0, -1));
+    }
+  };
+
+  const deleteDateComplete = () => {
+    setNumdates(0);
+    setDates((prevDates) => []);
+    setHours((prevHours) => []);
+  };
+
   const submitForm = (data) => {
     //console.log(data);
     // Works fine the data is coming through the form
@@ -119,7 +133,7 @@ const Blogs = () => {
               </Form.Group>
               <br></br>
               <Form.Group>
-                <Form.Label>Mood</Form.Label>
+                <Form.Label>Your Preffered Mood: </Form.Label>
                 <Form.Select
                   aria-label="Default select example"
                   placeholder="Select a Mood"
@@ -134,7 +148,7 @@ const Blogs = () => {
               </Form.Group>
               <br></br>
               <Form.Group>
-                <Form.Label>Budget</Form.Label>
+                <Form.Label>Your Preffered Budget: </Form.Label>
                 <Form.Select
                   aria-label="Default select example"
                   placeholder="Select a Budget"
@@ -149,7 +163,7 @@ const Blogs = () => {
               </Form.Group>
               <br></br>
               <Form.Group>
-                <Form.Label>Travel</Form.Label>
+                <Form.Label>Your Preffered Travel Distance: </Form.Label>
                 <Form.Select
                   aria-label="Default select example"
                   placeholder="Select a Travel choice"
@@ -164,36 +178,69 @@ const Blogs = () => {
               </Form.Group>
               <br></br>
               <Form.Group>
-                <Form.Label>Date:</Form.Label>
-                <Form.Floating>
+                <Form.Label>Your Preffered Date and time:</Form.Label>
+                <div class="container-fluid mb-3 mt-1">
+                  <div class="row d-flex justify-content-start">
+                    <div class="col-auto pe-0">
+                      <Button
+                        className="btn btn-outline-light mb-3 me-2"
+                        onClick={addDate}
+                      >
+                        Add one more Date
+                      </Button>
+                    </div>
+                    <div class="col-auto pe-0">
+                      <Button
+                        className="btn btn-outline-light mb-3 me-2"
+                        onClick={deleteDate}
+                      >
+                        Delete a Date
+                      </Button>
+                    </div>
+                    <div class="col-auto">
+                      <Button
+                        className="btn btn-outline-light mb-3"
+                        onClick={deleteDateComplete}
+                      >
+                        No preference
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div class="container-fluid mb-3 mt-1">
                   <LocalizationProvider
                     dateAdapter={AdapterDayjs}
                     adapterLocale="de"
                   >
                     {[...Array(numdates)].map((_, index) => (
-                      <div key={index}>
-                        <DateTimePicker
-                          label="Pick a Date"
-                          value={dates[index]}
-                          onChange={(newValue) =>
-                            handleDateChange(index, newValue)
-                          }
-                        />
-                        <TimePicker
-                          views={["hours", "minutes"]}
-                          format="HH:mm"
-                          value={hours[index]}
-                          onChange={(newValue) =>
-                            handleHoursChange(index, newValue)
-                          }
-                        />
+                      <div
+                        class="row d-flex justify-content-start mb-3 gx-2"
+                        key={index}
+                      >
+                        <div class="col-auto pe-0">
+                          <DateTimePicker
+                            label="Pick a Date"
+                            value={dates[index]}
+                            onChange={(newValue) =>
+                              handleDateChange(index, newValue)
+                            }
+                          />
+                        </div>
+                        <div class="col-auto">
+                          <TimePicker
+                            label="Pick Duration"
+                            views={["hours", "minutes"]}
+                            format="HH:mm"
+                            value={hours[index]}
+                            onChange={(newValue) =>
+                              handleHoursChange(index, newValue)
+                            }
+                          />
+                        </div>
                       </div>
                     ))}
-                    <Button className="btn btn-outline-light" onClick={addDate}>
-                      One more Date
-                    </Button>
                   </LocalizationProvider>
-                </Form.Floating>
+                </div>
               </Form.Group>
               <br></br>
               <Alert
