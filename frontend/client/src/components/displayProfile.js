@@ -4,7 +4,7 @@ const DisplayProfile = (props) => {
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Blog Profile for {props.username}</Modal.Title>
+        <Modal.Title>{props.username} preference this trip</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Card style={{ width: "29rem" }}>

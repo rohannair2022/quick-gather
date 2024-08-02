@@ -83,8 +83,7 @@ export default function NavBar() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        opacity: 0.6,
-        background: "#c19a6b",
+        background: "#008282",
       }}
     >
       <Container className="d-flex justify-content-center">

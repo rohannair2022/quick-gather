@@ -4,6 +4,12 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Alert } from "react-bootstrap";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/de";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
 
 const Blogs = () => {
   const {
@@ -16,6 +22,30 @@ const Blogs = () => {
 
   const [serverResponse, setServerResponse] = useState("");
   const [show, setShow] = useState(false);
+  const [numdates, setNumdates] = useState(1);
+  const [dates, setDates] = useState([dayjs()]);
+  const [hours, setHours] = useState([
+    dayjs().set("hour", 10).set("minute", 0),
+  ]);
+
+  const handleDateChange = (index, newValue) => {
+    const newDates = [...dates];
+    newDates[index] = newValue;
+    setDates(newDates);
+    console.log(newDates);
+  };
+
+  const handleHoursChange = (index, newValue) => {
+    const newHours = [...hours];
+    newHours[index] = newValue;
+    setHours(newHours);
+  };
+
+  const addDate = () => {
+    setNumdates(numdates + 1);
+    setDates([...dates, dayjs()]);
+    setHours([...hours, dayjs().set("hour", 10).set("minute", 0)]);
+  };
 
   const submitForm = (data) => {
     //console.log(data);
@@ -131,6 +161,39 @@ const Blogs = () => {
                   <option value="3">Outside the city within the country</option>
                   <option value="4">Outside the country</option>
                 </Form.Select>
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Date:</Form.Label>
+                <Form.Floating>
+                  <LocalizationProvider
+                    dateAdapter={AdapterDayjs}
+                    adapterLocale="de"
+                  >
+                    {[...Array(numdates)].map((_, index) => (
+                      <div key={index}>
+                        <DateTimePicker
+                          label="Pick a Date"
+                          value={dates[index]}
+                          onChange={(newValue) =>
+                            handleDateChange(index, newValue)
+                          }
+                        />
+                        <TimePicker
+                          views={["hours", "minutes"]}
+                          format="HH:mm"
+                          value={hours[index]}
+                          onChange={(newValue) =>
+                            handleHoursChange(index, newValue)
+                          }
+                        />
+                      </div>
+                    ))}
+                    <Button className="btn btn-outline-light" onClick={addDate}>
+                      One more Date
+                    </Button>
+                  </LocalizationProvider>
+                </Form.Floating>
               </Form.Group>
               <br></br>
               <Alert

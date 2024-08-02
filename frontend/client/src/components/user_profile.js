@@ -87,12 +87,8 @@ function Profile() {
               {...register("profile_pic", { required: true })}
             />
           </Form.Group>
-          <Form.Group className="button">
-            <Button
-              as="sub"
-              variant="primary"
-              onClick={handleSubmit(uploadPic)}
-            >
+          <Form.Group className="btn btn-outline-light">
+            <Button onClick={handleSubmit(uploadPic)}>
               Upload New Profile Pic
             </Button>
           </Form.Group>
