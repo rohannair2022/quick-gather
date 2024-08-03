@@ -43,7 +43,7 @@ const Blogs = () => {
     const newHours = [...hours];
     const newDisplayHours = [...hoursDisplay];
     newHours[index] = newValue;
-    newDisplayHours[index] = newValue.format();
+    newDisplayHours[index] = newValue.format("HH:mm");
     setHours(newHours);
     setHoursDisplay(newDisplayHours);
   };
