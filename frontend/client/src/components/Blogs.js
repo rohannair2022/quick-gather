@@ -24,21 +24,28 @@ const Blogs = () => {
   const [show, setShow] = useState(false);
   const [numdates, setNumdates] = useState(1);
   const [dates, setDates] = useState([dayjs()]);
-  const [hours, setHours] = useState([
-    dayjs().set("hour", 10).set("minute", 0),
+  const [datesDisplay, setDatesDisplay] = useState([dayjs().format()]);
+  const [hours, setHours] = useState([dayjs().set("hour", 1).set("minute", 0)]);
+  const [hoursDisplay, setHoursDisplay] = useState([
+    dayjs().set("hour", 1).set("minute", 0).format(),
   ]);
 
   const handleDateChange = (index, newValue) => {
     const newDates = [...dates];
+    const newDisplayDates = [...datesDisplay];
     newDates[index] = newValue;
+    newDisplayDates[index] = newValue.format();
     setDates(newDates);
-    console.log(newDates);
+    setDatesDisplay(newDisplayDates);
   };
 
   const handleHoursChange = (index, newValue) => {
     const newHours = [...hours];
+    const newDisplayHours = [...hoursDisplay];
     newHours[index] = newValue;
+    newDisplayHours[index] = newValue.format();
     setHours(newHours);
+    setHoursDisplay(newDisplayHours);
   };
 
   const addDate = () => {
@@ -73,6 +80,8 @@ const Blogs = () => {
       mood: data.mood,
       travel: data.travel,
       budget: data.budget,
+      dates: datesDisplay,
+      hours: hoursDisplay,
     };
 
     const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
@@ -214,27 +223,27 @@ const Blogs = () => {
                   >
                     {[...Array(numdates)].map((_, index) => (
                       <div
-                        class="row d-flex justify-content-start mb-3 gx-2"
+                        class="row d-flex justify-content-start mb-5 gx-2"
                         key={index}
                       >
-                        <div class="col-auto pe-0">
+                        <div class="col-auto pe-0 mb-3">
                           <DateTimePicker
                             label="Pick a Date"
                             value={dates[index]}
-                            onChange={(newValue) =>
-                              handleDateChange(index, newValue)
-                            }
+                            onChange={(newValue) => {
+                              handleDateChange(index, newValue);
+                            }}
                           />
                         </div>
                         <div class="col-auto">
                           <TimePicker
-                            label="Pick Duration"
+                            label="Pick Duration (In hours)"
                             views={["hours", "minutes"]}
                             format="HH:mm"
                             value={hours[index]}
-                            onChange={(newValue) =>
-                              handleHoursChange(index, newValue)
-                            }
+                            onChange={(newValue) => {
+                              handleHoursChange(index, newValue);
+                            }}
                           />
                         </div>
                       </div>
