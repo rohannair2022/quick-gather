@@ -8,6 +8,7 @@ from exts import db
 # db.create_all()
 from datetime import datetime
 from decouple import config
+from sqlalchemy import ARRAY
 
 # addtionally migrate the chnages using flask db upgrade
 
@@ -70,6 +71,7 @@ class User_info(db.Model):
     blog_budget = db.Column(db.String(30), nullable=False)
     blog_travel = db.Column(db.String(30), nullable=False)
     blog_mood = db.Column(db.String(30), nullable=False)
+    blog_dates = db.Column(db.Text())
 
     # Relationships
     user = db.relationship('User', backref=db.backref('user_infos', lazy=True))

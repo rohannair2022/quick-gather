@@ -5,6 +5,7 @@ from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 from statistics import mode
+from datetime import time
 
 
 blog_ns = Namespace('blog', description="A namespace for blog")
@@ -74,12 +75,18 @@ class BlogsResource(Resource):
         new_blog.users.append(db_user)
         new_blog.save()
 
+        dates = data.get('dates')
+        duration = data.get('hours')
+        print(dates, duration)
+        dates_iso = str([[dates[i], duration[i]] for i in range(len(dates))])
+
         new_info = User_info(
             user_id = db_user.id,
             blog_id = new_blog.id,
             blog_budget = data.get('budget'),
             blog_travel = data.get('travel'),
             blog_mood = data.get('mood'),
+            blog_dates = dates_iso,
         )
 
         new_info.save()
@@ -161,6 +168,8 @@ class BlogResource(Resource):
             user_to_add = User.query.filter_by(username=data.get('username')).first_or_404()
             blog_to_add.users.append(user_to_add)
             user_to_add.blogs.append(blog_to_add)
+
+
             new_info = User_info(
                 user_id = user_to_add.id,
                 blog_id = blog_to_add.id,
