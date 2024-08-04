@@ -27,7 +27,7 @@ const Blogs = () => {
   const [datesDisplay, setDatesDisplay] = useState([dayjs().format()]);
   const [hours, setHours] = useState([dayjs().set("hour", 1).set("minute", 0)]);
   const [hoursDisplay, setHoursDisplay] = useState([
-    dayjs().set("hour", 1).set("minute", 0).format(),
+    dayjs().set("hour", 1).set("minute", 0).format("HH:mm"),
   ]);
 
   const handleDateChange = (index, newValue) => {
@@ -46,12 +46,18 @@ const Blogs = () => {
     newDisplayHours[index] = newValue.format("HH:mm");
     setHours(newHours);
     setHoursDisplay(newDisplayHours);
+    console.log(newDisplayHours, newHours);
   };
 
   const addDate = () => {
     setNumdates(numdates + 1);
     setDates([...dates, dayjs()]);
     setHours([...hours, dayjs().set("hour", 10).set("minute", 0)]);
+    setDatesDisplay([...datesDisplay, dayjs().format()]);
+    setHours([
+      ...hoursDisplay,
+      dayjs().set("hour", 10).set("minute", 0).format("HH:mm"),
+    ]);
   };
 
   const deleteDate = () => {
@@ -59,6 +65,8 @@ const Blogs = () => {
       setNumdates(numdates - 1);
       setDates((prevDates) => prevDates.slice(0, -1));
       setHours((prevHours) => prevHours.slice(0, -1));
+      setDatesDisplay((prevDatesDisplay) => prevDatesDisplay.slice(0, -1));
+      setHoursDisplay((prevHoursDisplay) => prevHoursDisplay.slice(0, -1));
     }
   };
 
@@ -66,6 +74,8 @@ const Blogs = () => {
     setNumdates(0);
     setDates((prevDates) => []);
     setHours((prevHours) => []);
+    setDatesDisplay((prevDatesDisplay) => []);
+    setHoursDisplay((prevHoursDisplay) => []);
   };
 
   const submitForm = (data) => {
@@ -223,10 +233,10 @@ const Blogs = () => {
                   >
                     {[...Array(numdates)].map((_, index) => (
                       <div
-                        class="row d-flex justify-content-start mb-5 gx-2"
+                        class="row d-flex justify-content-start gx-2"
                         key={index}
                       >
-                        <div class="col-auto pe-0 mb-3">
+                        <div class="col-auto pe-2 mb-3">
                           <DateTimePicker
                             label="Pick a Date"
                             value={dates[index]}
@@ -235,7 +245,7 @@ const Blogs = () => {
                             }}
                           />
                         </div>
-                        <div class="col-auto">
+                        <div class="col-auto mb-3">
                           <TimePicker
                             label="Pick Duration (In hours)"
                             views={["hours", "minutes"]}
