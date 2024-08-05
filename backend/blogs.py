@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 from statistics import mode
 from datetime import time
+from dates_algo import common_time
 
 
 blog_ns = Namespace('blog', description="A namespace for blog")
@@ -36,11 +37,6 @@ blog_model_get = blog_ns.model(
     }
 )
 
-
-@blog_ns.route('/hello')
-class HelloResource(Resource):
-    def get(self):
-        return {"message":"Hello World"}
     
 
 @blog_ns.route('/blogs/<string:username>')
@@ -194,6 +190,7 @@ class BlogResource(Resource):
             budgets = [int(user.blog_budget) for user in users]  # Convert to float
             moods = [int(user.blog_mood) for user in users]
             travels = [int(user.blog_travel) for user in users]  # Convert to int
+            dates = [user.blog_dates for user in users] # Create the 3D array of Dates
 
             count_num = len(users)
             min_budget = blog_stats_budget[min(budgets)]
