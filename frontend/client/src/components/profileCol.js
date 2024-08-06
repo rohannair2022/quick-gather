@@ -7,6 +7,7 @@ const ProfileCol = (props) => {
   const [moods, setMoods] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [travels, setTravels] = useState([]);
+  const [dates, setDates] = useState([]);
   const [usernames, setUsername] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [error, setError] = useState(null);

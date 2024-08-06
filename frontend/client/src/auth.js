@@ -16,6 +16,38 @@ export const { useAuth, authFetch, login, logout } = createAuthProvider({
   onUpdateToken: (token) =>
     fetch("/auth/refresh", {
       method: "POST",
-      body: token.refresh_token,
-    }).then((r) => r.json()),
+      headers: {
+        Authorization: `Bearer ${token.refresh_token}`,
+      },
+    })
+      .then((r) => r.json())
+      .then((data) => ({
+        access_token: data.accessToken,
+        refresh_token: token.refresh_token, // Keep the existing refresh token
+      })),
 });
+
+export function setupTokenRefresh(expiresIn) {
+  const refreshTime = (expiresIn - 300) * 1000;
+  const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+  setTimeout(async () => {
+    try {
+      const result = await authFetch("/auth/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.refresh_token}`,
+        },
+      });
+      if (result.ok) {
+        const data = await result.json();
+        token.access_token = data.accessToken;
+        setupTokenRefresh(3600);
+      } else {
+        logout();
+      }
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+      logout();
+    }
+  }, refreshTime);
+}
