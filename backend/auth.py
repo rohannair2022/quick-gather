@@ -121,8 +121,13 @@ class Login(Resource):
 class RefreshResource(Resource):
     @jwt_required(refresh = True)
     def post(self):
-        current_user = get_jwt_identity()
-        new_access_token = create_access_token(identity=current_user)
-        return make_response(jsonify({"accessToken":new_access_token})), 200
+        try:
+            current_user = get_jwt_identity()
+            print(f"Refreshing token for user: {current_user}")
+            new_access_token = create_access_token(identity=current_user)
+            return make_response(jsonify({"accessToken": new_access_token})), 200
+        except Exception as e:
+            print(f"Error in refresh: {str(e)}")
+            return make_response(jsonify({"error": str(e)}), 422)
 
  

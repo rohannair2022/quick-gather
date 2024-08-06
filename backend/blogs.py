@@ -151,7 +151,8 @@ class BlogResource(Resource):
                  blog_stats_budget[int(user_id.blog_budget)],
                  blog_stats_travel[int(user_id.blog_travel)], 
                  find_picture(user_id), 
-                 find_username(user_id)] for user_id in users_id]
+                 find_username(user_id), 
+                 user_id.blog_dates] for user_id in users_id]
     
 
 @blog_ns.route('/join/<int:id>')
@@ -163,8 +164,16 @@ class BlogResource(Resource):
             data = request.get_json()
             blog_to_add = Blog.query.get_or_404(int(id))
             user_to_add = User.query.filter_by(username=data.get('username')).first_or_404()
-            blog_to_add.users.append(user_to_add)
-            user_to_add.blogs.append(blog_to_add)
+            if user_to_add not in blog_to_add.users:
+                blog_to_add.users.append(user_to_add)
+                user_to_add.blogs.append(blog_to_add)
+            else:
+                raise Exception('Cant join the same group')
+
+            dates = data.get('dates')
+            duration = data.get('hours')
+            print(dates, duration)
+            dates_iso = str([[dates[i], duration[i]] for i in range(len(dates))])
 
 
             new_info = User_info(
@@ -173,12 +182,13 @@ class BlogResource(Resource):
                 blog_budget = data.get('budget'),
                 blog_travel = data.get('travel'),
                 blog_mood = data.get('mood'),
+                blog_dates = dates_iso,
             )
             new_info.save()
 
-            return {"message":"Success"}
+            return {"message":"Success! You have been added to the group.", "response":"success"}
         except:
-            return {"message":"Group ID does not exist"}
+            return {"message":"Failed! Please try a different group ID.", "response":"danger"}
 
 @blog_ns.route('/stats/<int:id>')
 class BlogResource(Resource):
