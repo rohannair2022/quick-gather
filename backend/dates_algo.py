@@ -7,24 +7,38 @@ def set_date(iso_date: str) -> datetime:
 def setHoursandMins(duration: str) -> List[int]:
     return [int(input) for input in duration.split(':')]
 
-def common_time(users_dates: List[List[List[str]]]) -> Optional[List[datetime]]:
+def common_time(users_dates: List[List[List[str]]]) -> Optional[List[List[datetime]]]:
     """
     The strings are in ['isoformat', 'hh:mm']
     """
-    # Flatten the list of date ranges
-    all_ranges = [(set_date(date[0]), set_date(date[0]) + timedelta(hours=setHoursandMins(date[1])[0], minutes=setHoursandMins(date[1])[1])) 
-                  for user_dates in users_dates for date in user_dates]
-    
-    latest_start = max(start for start, _ in all_ranges)
-    earliest_end = min(end for _, end in all_ranges)
-    
-    # Check if there's a valid overlap
-    if latest_start < earliest_end:
-        return [latest_start, earliest_end]
-    else:
-        return None
+    potential_dates = []
 
+    for i, user_dates in enumerate(users_dates):
+        for j, date_time in enumerate(user_dates):
+            all_ranges = [
+                (set_date(other_user_dates[k][0]),
+                 set_date(other_user_dates[k][0]) + timedelta(hours=setHoursandMins(other_user_dates[k][1])[0],
+                                                              minutes=setHoursandMins(other_user_dates[k][1])[1]))
+                for other_user_dates in users_dates
+                for k in range(len(other_user_dates))
+                if (other_user_dates != user_dates or k == j)
+            ]
 
-# Test the function
-result = common_time([[['2024-08-11T14:30:34-04:00', '05:00'],['2024-08-11T18:36:34-04:00', '01:00']],[['2024-08-11T18:36:34-04:00', '01:00']]])
-print(result[0].isoformat(), result[1].isoformat())
+            if all_ranges:
+                latest_start = max(start for start, _ in all_ranges)
+                earliest_end = min(end for _, end in all_ranges)
+
+                # Check if there's a valid overlap
+                if latest_start < earliest_end:
+                    potential_dates.append([latest_start, earliest_end])
+
+    potential_dates_collect = []
+    potential_dates_final = []
+    for i in potential_dates:
+        date_string = i[0].isoformat()+i[1].isoformat()
+        if date_string not in potential_dates_collect:
+            potential_dates_final.append(i)
+            potential_dates_collect.append(date_string)
+
+    return potential_dates_final
+

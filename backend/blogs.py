@@ -5,8 +5,9 @@ from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 from statistics import mode
-from datetime import time
 from dates_algo import common_time
+from datetime import datetime, timedelta
+import ast
 
 
 blog_ns = Namespace('blog', description="A namespace for blog")
@@ -190,19 +191,28 @@ class BlogResource(Resource):
             budgets = [int(user.blog_budget) for user in users]  # Convert to float
             moods = [int(user.blog_mood) for user in users]
             travels = [int(user.blog_travel) for user in users]  # Convert to int
-            dates = [user.blog_dates for user in users] # Create the 3D array of Dates
+            dates = [ ast.literal_eval(user.blog_dates) for user in users if user.blog_dates] 
 
             count_num = len(users)
             min_budget = blog_stats_budget[min(budgets)]
             most_common_mood = blog_stats_mood.get(mode(moods))
             avg_travel = blog_stats_travel[round(sum(travels) / count_num) if count_num > 0 else 0]
 
+            if dates:
+                common_dates_iso = common_time(dates)
+                common_dates = []
+                for i in common_dates_iso:
+                    common_dates.append(f'{i[0].date()}@{i[0].time()} to {i[1].date()}@{i[1].time()}')
+            else:
+                common_dates = ["No common dates"]
+
             return {
                 "message": "Success",
                 "number": count_num,
                 "mood": most_common_mood,
                 "budget": min_budget,
-                "travel": avg_travel
+                "travel": avg_travel,
+                "common_dates": common_dates
             }
         except Exception as e:
             print(f"Error: {str(e)}")
