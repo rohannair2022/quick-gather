@@ -16,6 +16,7 @@ function Profile() {
   const [path, setPath] = useState("");
   const [show, setShow] = useState(false);
   const [serverResponse, setServerResponse] = useState("");
+  const [response, setResponse] = useState("");
 
   const uploadPic = (data) => {
     const username = JSON.parse(localStorage.getItem("username"));
@@ -39,6 +40,7 @@ function Profile() {
       .then((data) => {
         setShow(true);
         setServerResponse(data.message);
+        setResponse(data.response);
       })
       .catch((error) => {
         setShow(true);
@@ -92,14 +94,14 @@ function Profile() {
               Upload New Profile Pic
             </Button>
           </Form.Group>
-          <Alert show={show} style={{ width: 250, background: "red" }}>
+          <Alert
+            show={show}
+            variant="success"
+            onClose={() => setShow(false)}
+            dismissible
+          >
+            <Alert.Heading>Upload Message</Alert.Heading>
             <p>{serverResponse}</p>
-            <hr />
-            <div className="d-flex justify-content-start">
-              <Button onClick={() => setShow(false)} variant="outline-success">
-                Close me
-              </Button>
-            </div>
           </Alert>
         </Card.Body>
       </Card>

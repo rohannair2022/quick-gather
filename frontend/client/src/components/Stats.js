@@ -58,9 +58,11 @@ const Stats = (props) => {
       </div>
       <div className="col auto" style={{ padding: "10px" }}>
         <p>
-          <strong>Dates: </strong>
+          <strong>Common Times: </strong>
           <br></br>
-          {dates}
+          {dates.map((date, index) => (
+            <div key={index}>{date}</div>
+          ))}
         </p>
       </div>
     </div>
