@@ -36,7 +36,7 @@ class Signup(Resource):
         # Check if username already exists
         db_user = User.query.filter_by(username=username).first()
         if db_user is not None:
-            return {"message": "Username already exists."}, 400
+            return {"message": "Username already exists. Please try a different one", "response":"danger"}, 400
 
         # Wrap the process_signup function with the current request context
         @copy_current_request_context
@@ -47,7 +47,7 @@ class Signup(Resource):
         thread = Thread(target=async_process_signup, args=(data,))
         thread.start()
 
-        return {"message": "Your signup request is being processed. Please check your email to confirm your account."}, 202
+        return {"message": "Your signup request is being processed. Please check your email to confirm your account.", "response":"danger"}, 202
 
 def process_signup(data):
     try:

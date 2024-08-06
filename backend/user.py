@@ -47,9 +47,9 @@ class Upload(Resource):
                 user.picture = f'https://{config("S3_BUCKET")}.s3.amazonaws.com/{filename}'
                 user.save()
 
-            return {"message": "Picture Uploaded Successfully", "filename": user.picture}, 200
+            return {"message": "Picture Uploaded Successfully. Refresh the Page", "filename": user.picture, "response":"success"}, 200
         else:
-            return {"error": "File type not allowed"}, 400
+            return {"error": "File type not allowed", "response":"danger"}, 400
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}

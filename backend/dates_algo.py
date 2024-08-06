@@ -7,6 +7,17 @@ def set_date(iso_date: str) -> datetime:
 def setHoursandMins(duration: str) -> List[int]:
     return [int(input) for input in duration.split(':')]
 
+
+def set_dates(user_dates: List[List[str]]):
+    all_ranges = [
+        (set_date(other_user_dates[0]),
+            set_date(other_user_dates[0]) + timedelta(hours=setHoursandMins(other_user_dates[1])[0],
+                                                        minutes=setHoursandMins(other_user_dates[1])[1]))
+        for other_user_dates in user_dates
+    ]
+
+    return all_ranges
+
 def common_time(users_dates: List[List[List[str]]]) -> Optional[List[List[datetime]]]:
     """
     The strings are in ['isoformat', 'hh:mm']

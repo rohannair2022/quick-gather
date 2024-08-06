@@ -5,7 +5,7 @@ from exts import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required
 from statistics import mode
-from dates_algo import common_time
+from dates_algo import common_time, set_dates
 from datetime import datetime, timedelta
 import ast
 
@@ -146,13 +146,20 @@ class BlogResource(Resource):
         def find_username(user_id:User_info)->str:
             user = User.query.filter_by(id = user_id.user_id).first()
             return user.username
+        def find_userdates(dates):
+            common_dates_iso = set_dates(dates)
+            common_dates = []
+            for i in common_dates_iso:
+                common_dates.append(f'{i[0].date()}@{i[0].time()} - {i[1].date()}@{i[1].time()}')
+            return common_dates
+
         users_id = User_info.query.filter_by(blog_id = id).all()
         return [[blog_stats_mood[int(user_id.blog_mood)], 
                  blog_stats_budget[int(user_id.blog_budget)],
                  blog_stats_travel[int(user_id.blog_travel)], 
                  find_picture(user_id), 
                  find_username(user_id), 
-                 user_id.blog_dates] for user_id in users_id]
+                 find_userdates(ast.literal_eval(user_id.blog_dates))] for user_id in users_id]
     
 
 @blog_ns.route('/join/<int:id>')
@@ -201,7 +208,7 @@ class BlogResource(Resource):
             budgets = [int(user.blog_budget) for user in users]  # Convert to float
             moods = [int(user.blog_mood) for user in users]
             travels = [int(user.blog_travel) for user in users]  # Convert to int
-            dates = [ ast.literal_eval(user.blog_dates) for user in users if user.blog_dates] 
+            dates = [ ast.literal_eval(user.blog_dates) for user in users if user.blog_dates ] 
 
             count_num = len(users)
             min_budget = blog_stats_budget[min(budgets)]
@@ -212,7 +219,7 @@ class BlogResource(Resource):
                 common_dates_iso = common_time(dates)
                 common_dates = []
                 for i in common_dates_iso:
-                    common_dates.append(f'{i[0].date()}@{i[0].time()} to {i[1].date()}@{i[1].time()}')
+                    common_dates.append(f'{i[0].date()}@{i[0].time()} - {i[1].date()}@{i[1].time()}')
             else:
                 common_dates = ["No common dates"]
 
