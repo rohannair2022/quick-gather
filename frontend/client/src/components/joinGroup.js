@@ -18,7 +18,7 @@ function JoinGroup() {
   } = useForm();
 
   const [serverResponse, setServerResponse] = useState("");
-  const [color, setColor] = useState("");
+  const [response, setResponse] = useState("");
   const [show, setShow] = useState(false);
   const [numdates, setNumdates] = useState(1);
   const [dates, setDates] = useState([dayjs()]);
@@ -109,10 +109,12 @@ function JoinGroup() {
         if (data.message == "Success") {
           setServerResponse(data.message);
           setShow(true);
+          setResponse(data.response);
           reset();
         } else {
           setServerResponse(data.message);
           setShow(true);
+          setResponse(data.response);
           reset();
         }
       });
@@ -230,7 +232,7 @@ function JoinGroup() {
                         <div class="col-auto pe-2 mb-3">
                           <DateTimePicker
                             label="Pick a Date"
-                            value={dates[index]}
+                            value={dayjs(dates[index])}
                             onChange={(newValue) => {
                               handleDateChange(index, newValue);
                             }}
@@ -241,7 +243,7 @@ function JoinGroup() {
                             label="Pick Duration (In hours)"
                             views={["hours", "minutes"]}
                             format="HH:mm"
-                            value={hours[index]}
+                            value={dayjs(hours[index])}
                             onChange={(newValue) => {
                               handleHoursChange(index, newValue);
                             }}
@@ -253,6 +255,15 @@ function JoinGroup() {
                 </div>
               </Form.Group>
               <br></br>
+              <Alert
+                show={show}
+                variant={response}
+                onClose={() => setShow(false)}
+                dismissible
+              >
+                <Alert.Heading>Join Blog Message</Alert.Heading>
+                <p>{serverResponse}</p>
+              </Alert>
               <Form.Group className="mb-3">
                 <Button
                   type="submit"
@@ -279,15 +290,6 @@ function JoinGroup() {
                   Join Group
                 </Button>
               </Form.Group>
-              <Alert
-                show={show}
-                variant="success"
-                onClose={() => setShow(false)}
-                dismissible
-              >
-                <Alert.Heading>Join Blog Message</Alert.Heading>
-                <p>{serverResponse}</p>
-              </Alert>
             </Form>
           </div>
         </Col>
