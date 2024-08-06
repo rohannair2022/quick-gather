@@ -38,6 +38,7 @@ const ProfileCol = (props) => {
           setTravels(data.map((datas) => datas[2]));
           setImgLinks(data.map((datas) => datas[3]));
           setUsername(data.map((datas) => datas[4]));
+          setDates(data.map((datas) => datas[5]));
           setIsHovered(new Array(data.length).fill(false));
         } else {
           console.error("Received data is not an array:", data);
@@ -102,6 +103,7 @@ const ProfileCol = (props) => {
                   mood={moods[index]}
                   travel={travels[index]}
                   budget={budgets[index]}
+                  dates={dates[index]}
                 />
               )}
             </Col>

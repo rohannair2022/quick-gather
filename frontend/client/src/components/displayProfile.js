@@ -20,6 +20,10 @@ const DisplayProfile = (props) => {
               <p>
                 <strong>Travel :</strong> {props.travel}
               </p>
+              <p>
+                <strong>Dates :</strong>{" "}
+                {props.dates ? props.dates : `No dates`}
+              </p>
             </Card.Text>
           </Card.Body>
         </Card>

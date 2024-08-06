@@ -1,6 +1,12 @@
 import { Form, Button, Alert, Container, Col, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import "dayjs/locale/de";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from "dayjs";
 
 function JoinGroup() {
   const {
@@ -14,6 +20,61 @@ function JoinGroup() {
   const [serverResponse, setServerResponse] = useState("");
   const [color, setColor] = useState("");
   const [show, setShow] = useState(false);
+  const [numdates, setNumdates] = useState(1);
+  const [dates, setDates] = useState([dayjs()]);
+  const [datesDisplay, setDatesDisplay] = useState([dayjs().format()]);
+  const [hours, setHours] = useState([dayjs().set("hour", 1).set("minute", 0)]);
+  const [hoursDisplay, setHoursDisplay] = useState([
+    dayjs().set("hour", 1).set("minute", 0).format("HH:mm"),
+  ]);
+
+  const handleDateChange = (index, newValue) => {
+    const newDates = [...dates];
+    const newDisplayDates = [...datesDisplay];
+    newDates[index] = newValue;
+    newDisplayDates[index] = newValue.format();
+    setDates(newDates);
+    setDatesDisplay(newDisplayDates);
+  };
+
+  const handleHoursChange = (index, newValue) => {
+    const newHours = [...hours];
+    const newDisplayHours = [...hoursDisplay];
+    newHours[index] = newValue;
+    newDisplayHours[index] = newValue.format("HH:mm");
+    setHours(newHours);
+    setHoursDisplay(newDisplayHours);
+    console.log(newDisplayHours, newHours);
+  };
+
+  const addDate = () => {
+    setNumdates(numdates + 1);
+    setDates([...dates, dayjs()]);
+    setHours([...hours, dayjs().set("hour", 10).set("minute", 0)]);
+    setDatesDisplay([...datesDisplay, dayjs().format()]);
+    setHours([
+      ...hoursDisplay,
+      dayjs().set("hour", 10).set("minute", 0).format("HH:mm"),
+    ]);
+  };
+
+  const deleteDate = () => {
+    if (dates.length > 1) {
+      setNumdates(numdates - 1);
+      setDates((prevDates) => prevDates.slice(0, -1));
+      setHours((prevHours) => prevHours.slice(0, -1));
+      setDatesDisplay((prevDatesDisplay) => prevDatesDisplay.slice(0, -1));
+      setHoursDisplay((prevHoursDisplay) => prevHoursDisplay.slice(0, -1));
+    }
+  };
+
+  const deleteDateComplete = () => {
+    setNumdates(0);
+    setDates((prevDates) => []);
+    setHours((prevHours) => []);
+    setDatesDisplay((prevDatesDisplay) => []);
+    setHoursDisplay((prevHoursDisplay) => []);
+  };
 
   const submitForm = (data) => {
     const username = JSON.parse(localStorage.getItem("username"));
@@ -26,6 +87,8 @@ function JoinGroup() {
       mood: data.mood,
       travel: data.travel,
       budget: data.budget,
+      dates: datesDisplay,
+      hours: hoursDisplay,
     };
 
     const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
@@ -46,12 +109,10 @@ function JoinGroup() {
         if (data.message == "Success") {
           setServerResponse(data.message);
           setShow(true);
-          setColor("green");
           reset();
         } else {
           setServerResponse(data.message);
           setShow(true);
-          setColor("red");
           reset();
         }
       });
@@ -126,7 +187,72 @@ function JoinGroup() {
                 </Form.Select>
               </Form.Group>
               <br></br>
-
+              <Form.Group>
+                <Form.Label>Your Preffered Date and time:</Form.Label>
+                <div class="container-fluid mb-3 mt-1">
+                  <div class="row d-flex justify-content-start">
+                    <div class="col-auto pe-0">
+                      <Button
+                        className="btn btn-outline-light mb-3 me-2"
+                        onClick={addDate}
+                      >
+                        Add one more Date
+                      </Button>
+                    </div>
+                    <div class="col-auto pe-0">
+                      <Button
+                        className="btn btn-outline-light mb-3 me-2"
+                        onClick={deleteDate}
+                      >
+                        Delete a Date
+                      </Button>
+                    </div>
+                    <div class="col-auto">
+                      <Button
+                        className="btn btn-outline-light mb-3"
+                        onClick={deleteDateComplete}
+                      >
+                        No preference
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div class="container-fluid mb-3 mt-1">
+                  <LocalizationProvider
+                    dateAdapter={AdapterDayjs}
+                    adapterLocale="de"
+                  >
+                    {[...Array(numdates)].map((_, index) => (
+                      <div
+                        class="row d-flex justify-content-start gx-2"
+                        key={index}
+                      >
+                        <div class="col-auto pe-2 mb-3">
+                          <DateTimePicker
+                            label="Pick a Date"
+                            value={dates[index]}
+                            onChange={(newValue) => {
+                              handleDateChange(index, newValue);
+                            }}
+                          />
+                        </div>
+                        <div class="col-auto mb-3">
+                          <TimePicker
+                            label="Pick Duration (In hours)"
+                            views={["hours", "minutes"]}
+                            format="HH:mm"
+                            value={hours[index]}
+                            onChange={(newValue) => {
+                              handleHoursChange(index, newValue);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </LocalizationProvider>
+                </div>
+              </Form.Group>
+              <br></br>
               <Form.Group className="mb-3">
                 <Button
                   type="submit"
@@ -153,17 +279,14 @@ function JoinGroup() {
                   Join Group
                 </Button>
               </Form.Group>
-              <Alert show={show} style={{ background: `${color}` }}>
-                <p>'{serverResponse}'</p>
-                <hr />
-                <div className="d-flex justify-content-start">
-                  <Button
-                    onClick={() => setShow(false)}
-                    variant="outline-success"
-                  >
-                    Close me
-                  </Button>
-                </div>
+              <Alert
+                show={show}
+                variant="success"
+                onClose={() => setShow(false)}
+                dismissible
+              >
+                <Alert.Heading>Join Blog Message</Alert.Heading>
+                <p>{serverResponse}</p>
               </Alert>
             </Form>
           </div>

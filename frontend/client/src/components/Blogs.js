@@ -31,22 +31,35 @@ const Blogs = () => {
   ]);
 
   const handleDateChange = (index, newValue) => {
-    const newDates = [...dates];
-    const newDisplayDates = [...datesDisplay];
-    newDates[index] = newValue;
-    newDisplayDates[index] = newValue.format();
-    setDates(newDates);
-    setDatesDisplay(newDisplayDates);
+    try {
+      const newDates = [...dates];
+      const newDisplayDates = [...datesDisplay];
+      newDates[index] = newValue;
+      newDisplayDates[index] = newValue ? newValue.format() : "";
+      setDates(newDates);
+      setDatesDisplay(newDisplayDates);
+
+      console.log("Updated dates:", newDates);
+      console.log("Updated datesDisplay:", newDisplayDates);
+    } catch (error) {
+      console.error("Error in handleDateChange:", error);
+    }
   };
 
   const handleHoursChange = (index, newValue) => {
-    const newHours = [...hours];
-    const newDisplayHours = [...hoursDisplay];
-    newHours[index] = newValue;
-    newDisplayHours[index] = newValue.format("HH:mm");
-    setHours(newHours);
-    setHoursDisplay(newDisplayHours);
-    console.log(newDisplayHours, newHours);
+    try {
+      const newHours = [...hours];
+      const newDisplayHours = [...hoursDisplay];
+      newHours[index] = newValue;
+      newDisplayHours[index] = newValue ? newValue.format("HH:mm") : "";
+      setHours(newHours);
+      setHoursDisplay(newDisplayHours);
+
+      console.log("Updated hours:", newHours);
+      console.log("Updated hoursDisplay:", newDisplayHours);
+    } catch (error) {
+      console.error("Error in handleHoursChange:", error);
+    }
   };
 
   const addDate = () => {
@@ -239,7 +252,7 @@ const Blogs = () => {
                         <div class="col-auto pe-2 mb-3">
                           <DateTimePicker
                             label="Pick a Date"
-                            value={dates[index]}
+                            value={dayjs(dates[index])}
                             onChange={(newValue) => {
                               handleDateChange(index, newValue);
                             }}
@@ -250,7 +263,7 @@ const Blogs = () => {
                             label="Pick Duration (In hours)"
                             views={["hours", "minutes"]}
                             format="HH:mm"
-                            value={hours[index]}
+                            value={dayjs(hours[index])}
                             onChange={(newValue) => {
                               handleHoursChange(index, newValue);
                             }}
