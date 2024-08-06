@@ -21,8 +21,10 @@ const DisplayProfile = (props) => {
                 <strong>Travel :</strong> {props.travel}
               </p>
               <p>
-                <strong>Dates :</strong>{" "}
-                {props.dates ? props.dates : `No dates`}
+                <strong>Dates Available :</strong>{" "}
+                {props.dates
+                  ? props.dates.map((date) => <p>{date}</p>)
+                  : `No dates`}
               </p>
             </Card.Text>
           </Card.Body>

@@ -32,6 +32,10 @@ const Signup = () => {
 
   const [show, setShow] = useState(false);
 
+  // The response type for Alert Frontend
+
+  const [response, setResponse] = useState("");
+
   // To show wether the post request to add a user was succesful or not
 
   const [serverResponse, setServerResponse] = useState("");
@@ -82,6 +86,7 @@ const Signup = () => {
         .then((data) => {
           setServerResponse(data.message);
           setShow(true);
+          setResponse(data.response);
         });
 
       // Call the reset func defined using the form hook.
@@ -113,18 +118,6 @@ const Signup = () => {
           style and functionality created by the react-bootstrap library. Notice that the onClick, sets the Show
           variable to false. This is to remove the pop up and not show it.     
         */}
-              <Alert show={show} variant="success" style={{ width: 250 }}>
-                <p>{serverResponse}</p>
-                <hr />
-                <div className="d-flex justify-content-start">
-                  <Button
-                    onClick={() => setShow(false)}
-                    variant="outline-success"
-                  >
-                    Close me
-                  </Button>
-                </div>
-              </Alert>
               <form>
                 <Form.Group className="mb-3">
                   <Form.Label>Username</Form.Label>
@@ -207,6 +200,15 @@ const Signup = () => {
                 {errors.confirm && (
                   <span style={{ color: "red" }}>Passwords do not match</span>
                 )}
+                <Alert
+                  show={show}
+                  variant={response}
+                  onClose={() => setShow(false)}
+                  dismissible
+                >
+                  <Alert.Heading>Sign-up Message</Alert.Heading>
+                  <p>{serverResponse}</p>
+                </Alert>
                 <Form.Group className="mb-3">
                   <Button
                     as="sub"

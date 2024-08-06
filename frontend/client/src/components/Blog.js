@@ -8,7 +8,7 @@ const Blog = (props) => {
   const [isHoveredLeave, setIsHoveredLeave] = useState(false);
   const [isHoveredChat, setIsHoveredChat] = useState(false);
   return (
-    <Card style={{ marginTop: 20 }}>
+    <Card style={{ marginTop: 20, boxShadow: "2px -1px 5px #333" }}>
       <Card.Header>{`Group ID : ${props.id}`}</Card.Header>
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
