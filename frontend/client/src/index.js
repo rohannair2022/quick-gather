@@ -12,19 +12,28 @@ import Profile from "./components/user_profile";
 import Success from "./components/signupSuccess";
 import Failure from "./components/signupFailure";
 import Stats from "./components/Stats";
-import { useAuth, setupTokenRefresh } from "./auth";
+import { useAuth, refreshToken } from "./auth";
 
 const App = () => {
-  const [isLoggedIn] = useAuth();
+  const [refresh, setRefresh] = useState(false);
+  const loggedIn = useAuth();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const expiresIn = 3600;
-      if (expiresIn) {
-        setupTokenRefresh(expiresIn);
+    const interval = setInterval(() => {
+      setRefresh(true);
+    }, 50 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (refresh) {
+      if (loggedIn[0]) {
+        refreshToken();
       }
+      setRefresh(false);
     }
-  }, [isLoggedIn]);
+  }, [refresh]);
 
   return (
     <Router>

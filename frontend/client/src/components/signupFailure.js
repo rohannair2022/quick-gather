@@ -2,7 +2,7 @@ import React from "react";
 
 const Failure = () => {
   return (
-    <div style={{ alignItems: "center" }}>
+    <div style={{ alignItems: "center", marginTop: "20px" }}>
       <center>
         <h1>
           There is an error. Either your token expired or you have used this
