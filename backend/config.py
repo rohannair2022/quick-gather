@@ -16,6 +16,7 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI ='postgresql://postgres:Database4833@localhost:5432/userDB'
     DEBUG = True
     SQLALCHEMY_ECHO=True 
+    JWT_SECRET_KEY = config('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     MAIL_SERVER=config('MAIL_SERVER')

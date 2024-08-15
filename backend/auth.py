@@ -47,7 +47,7 @@ class Signup(Resource):
         thread = Thread(target=async_process_signup, args=(data,))
         thread.start()
 
-        return {"message": "Your signup request is being processed. Please check your email to confirm your account.", "response":"danger"}, 202
+        return {"message": "Your signup request is being processed. Please check your email to confirm your account.", "response":"success"}, 202
 
 def process_signup(data):
     try:
@@ -119,15 +119,16 @@ class Login(Resource):
 
 @auth_ns.route('/refresh')
 class RefreshResource(Resource):
-    @jwt_required(refresh = True)
+    @jwt_required(refresh=True)
     def post(self):
         try:
             current_user = get_jwt_identity()
             print(f"Refreshing token for user: {current_user}")
             new_access_token = create_access_token(identity=current_user)
-            return make_response(jsonify({"accessToken": new_access_token})), 200
+            return make_response(jsonify({"accessToken": new_access_token}), 200)
         except Exception as e:
             print(f"Error in refresh: {str(e)}")
-            return make_response(jsonify({"error": str(e)}), 422)
+            return make_response({"error": "Token refresh failed"}, 422)
+
 
  
