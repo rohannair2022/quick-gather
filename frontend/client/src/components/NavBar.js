@@ -4,7 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { logout, useAuth } from "../auth";
+import { logout, useAuth } from "../auth.tsx";
 import { useState } from "react";
 
 function LoggedInLinks() {
@@ -37,7 +37,10 @@ function LoggedInLinks() {
         onMouseEnter={() => setlogoutHover(true)}
         onMouseDown={() => setlogoutHover(false)}
         style={{ fontWeight: "bold" }}
-        onClick={logout}
+        onClick={() => {
+          logout(); // Call the logout function
+          localStorage.setItem("username", ""); // Clear the username from localStorage
+        }}
       >
         Log-out
       </Link>

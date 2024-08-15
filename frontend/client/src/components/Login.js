@@ -3,7 +3,7 @@ import { Form, Button, Alert, Container, Col, Row } from "react-bootstrap";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { login } from "../auth";
+import { login } from "../auth.tsx";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {

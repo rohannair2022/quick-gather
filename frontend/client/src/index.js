@@ -12,28 +12,48 @@ import Profile from "./components/user_profile";
 import Success from "./components/signupSuccess";
 import Failure from "./components/signupFailure";
 import Stats from "./components/Stats";
-import { useAuth, refreshToken } from "./auth";
+import { useAuth, login, logout } from "./auth.tsx";
 
 const App = () => {
-  const [refresh, setRefresh] = useState(false);
-  const loggedIn = useAuth();
+  const { isAuthenticated, authSession } = useAuth();
+  const [initial, setInitial] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRefresh(true);
-    }, 50 * 60 * 1000);
+    const refreshToken = async () => {
+      if (!initial && authSession) {
+        try {
+          const response = await fetch("/auth/refresh", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${authSession.refresh_token}`,
+            },
+          });
 
-    return () => clearInterval(interval);
-  }, []);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
-  useEffect(() => {
-    if (refresh) {
-      if (loggedIn[0]) {
-        refreshToken();
+          const data = await response.json();
+          const updatedSession = {
+            ...authSession,
+            access_token: data.accessToken,
+          };
+          localStorage.setItem(
+            "REACT_TOKEN_AUTH_KEY",
+            JSON.stringify(updatedSession)
+          );
+          login(updatedSession); // Update the session with the new access token
+        } catch (error) {
+          console.error("Failed to refresh token:", error.message);
+          logout(); // Handle logout if refresh fails
+          localStorage.removeItem("REACT_TOKEN_AUTH_KEY");
+        }
       }
-      setRefresh(false);
-    }
-  }, [refresh]);
+      setInitial(false);
+    };
+
+    refreshToken();
+  }, [initial, authSession, login, logout]);
 
   return (
     <Router>
