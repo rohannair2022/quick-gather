@@ -180,7 +180,10 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
               return all_ranges
         
         ```
-      - Now we utilize our helper functions in the common_find alogorhtm that will return a list of common dates and time. 
+      - Next, we use our helper functions within the common_find algorithm to return a list of common dates and times. The common_find algorithm initializes an empty list called potential_dates that will store all the overlapping time ranges among all users. The algorithm first          iterates over each user's entries, and within that loop, it goes through each individual date and duration entry for that user. This step ensures that all possible time ranges for each user's date and duration are compared with those of every other user.
+        Once we've filled in all possible ranges for a user's date, we compare them to find the latest start time and the earliest end time, determining the time range that works for a specific user date when compared to all other users' dates.
+        After this process is repeated for all dates and potential_dates is populated, we generate a final list of date ranges to display. During this step, we convert the date-time data types into strings and remove any duplicate ranges.
+        
         ```python
           def common_time(users_dates: List[List[List[str]]]) -> Optional[List[List[datetime]]]:
             potential_dates = []
@@ -193,6 +196,8 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
                                                                       minutes=setHoursandMins(other_user_dates[k][1])[1]))
                         for other_user_dates in users_dates
                         for k in range(len(other_user_dates))
+
+                        # The if statement compares dates from other users and not the same user
                         if (other_user_dates != user_dates or k == j)
                     ]
         
@@ -206,6 +211,7 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
         
             potential_dates_collect = []
             potential_dates_final = []
+            # Removes Duplicates and creates new list of string time ranges
             for i in potential_dates:
                 date_string = i[0].isoformat()+i[1].isoformat()
                 if date_string not in potential_dates_collect:
