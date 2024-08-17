@@ -10,10 +10,16 @@ The app then generates group ‘stats,’ providing individual and collective in
 - Database and ORMs : PostgreSQL, SQLAlchemy
 - Tools : AWS S3
 
+
   
-## Backend 
+
+## Design & SQL Relationships
+
+## Extra Backend Details : 
+> In this section, I'll walk you through the structure of the backend architecture and a detailed implementation of a few selected features.
+
 I opted for Flask to develop my REST API backend interface. The primary reason for selecting this framework was its microservice architecture. I wanted to avoid the predefined backend structure typical of frameworks like Django.
-My goal was to have the freedom to explore, learn, and gradually incorporate new features along with CRUD operations into the website as I progressed. I will discuss some of the following features I implemented in the site along with the REST Api Architecture :
+My goal was to have the freedom to explore, learn, and gradually incorporate new features along with CRUD operations into the website as I progressed. I will discuss a few of the many features I implemented in the site along with the REST Api Architecture :
 
 - ### Architecture 
     I chose to implement a microservice architecture using REST APIs with the flask_restx library. To structure the application, I divided the api namespaces into three primary categories:
@@ -31,7 +37,7 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
     
 
 - ### Features (Some of them)
-    - **Login/ Signup Authentication using Email Verification** :
+    - **Authentication for Login/Signup using Email Verification and JWT** :
       - User authentication was one of the first features I implemented after setting up the initial DB schema with SQLAlchemy. The initial User auth structure followed a very simple CRUD interface. The user would interact with the frontend form and send
         a POST request to the server after the form was validated in the frontend. The sign-up POST Request would check if the username already exist in the DB. We do this check by searching through imported User Table Model and query searching the username. If it exists,
         then it returns a jsonified message indicating that the username is already in use. If it does not exist, then we proccess the request and add the user details to the database.
@@ -221,7 +227,9 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
             return potential_dates_final
         ```
 
-## Frontend 
+## Extra Frontend Details
+> In this section I will covers the key components and external libraries used. I won't dive into the implementation details to keep the README from becoming too lengthy (ik it already is).
+
 I chose React for the frontend to streamline development. This library reduces the need for extensive JavaScript coding while efficiently managing component updates based on data changes. React's advantages include improved state handling, faster development through JSX syntax, and performance optimization via the virtual DOM.
 
 - ### Routes : Component
@@ -231,7 +239,7 @@ I chose React for the frontend to streamline development. This library reduces t
   - '/createGroup' : CreateGroup
   - '/joinGroup' : JoinGroup
   - '/Profile' : Profile
-  - '/Failure' : Failsure
+  - '/Failure' : Failure
   - '/Success' : Success
     
 - ### External Libraries/ Componenets Used
@@ -241,16 +249,11 @@ I chose React for the frontend to streamline development. This library reduces t
     - Modals: I found the modals component especially useful for implementing "pop-ups" in various features like chatting, updating blogs, and viewing user stats. They significantly streamlined my development process by eliminating the need to create separate components and routes for every minor feature.
     - Buttons: The Buttons component was preferred because it offered predefined styles and additional functionalities beyond what a standard HTML button provides.
     - Alerts : The Alerts component were used as small "pop-ups" to notify users about the success or failure of actions. An action for example would be a login request. The server's response would be parsed and displayed in these alerts to keep users informed on what happened.
-    - Forms : The Forms component was arguably one of the most valuable components to me from the library. It offers extensive functionality that goes beyond what a standard HTML form provides. The component excels in several areas: it supports thorough error checking to ensure data integrity, enables easy design resetting to quickly revert to the initial form layout, and facilitates the registration and submission of form elements. 
-  - React Router
-  - React Token Auth
-  - React Hook Form
-  - MUI Date Picker
-    
-- ### Components Created 
-  
-  
+    - Forms : The Forms component along with the useForm hook from the [React Hook Form Library](https://react-hook-form.com/) was arguably one of the most valuable component combination for me. The useForm hook provided extensive functionality that goes beyond what a standard HTML form provides. The combination of components exceled in several areas: it supports thorough error checking to ensure data integrity, enables easy design resetting to quickly revert to the initial form layout, and facilitates the registration and submission of form elements. 
+  - [React Router Library](https://reactrouter.com/en/main):
+    - This library had the neccesary components for routing in the application. We wrap the Router Component over the application and define all the routes through the Routes and Route component. 
+  - [MUI Date Picker Library](https://mui.com/x/react-date-pickers/) : 
+    This library provided the essential components that were used to provide the GUI for the date time selction while joining or creating a group.  
 
-## Design & SQL Relationships
 
 
