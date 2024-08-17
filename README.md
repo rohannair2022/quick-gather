@@ -1,4 +1,4 @@
-# Social Media Application for Event Planning (Work in Progress)
+# QuickGather - A Social Media Application for Event Planning
 
 ## Overview 
 QuickGather is a social media app designed to simplify event planning with friends. Users can join/create a group by entering their mood, availability, budget, and preferred travel distance. 
@@ -14,7 +14,21 @@ The app then generates group ‘stats,’ providing individual and collective in
   
 
 ## Design & SQL Relationships
+> In this section, I'll walk you through the Database Schema.
 
+![alt text](DB.png)
+- ### Strcuture
+  - User
+    - The User Table is a central component of the application's user management system. It stores essential authentication data including unique usernames and encrypted passwords, as well as contact information like email addresses. The table also maintains a link to each user's profile picture in the S3 object storage. Through its relationships with other tables, particularly the many-to-many association with the Blog table, it keeps track of the groups or blogs a user has joined.
+  - Blog
+    - The Blog table stores essential details about each group or blog created in the system. At its core, it captures the group's identity through a unique title, limited to 30 characters to ensure concise and manageable names. Accompanying the title is a more extensive description field, implemented as a Text type to accommodate detailed explanations of the group's purpose, guidelines, or any other relevant information. This description provides context and helps potential members understand the group's focus and objectives.
+A key feature of the Blog table is its ability to maintain associations with users. Through a many-to-many relationship implemented via the user_channel association table, the Blog model can efficiently track all users who are members of or associated with each group. This relationship is bidirectional, allowing for easy querying of a group's members as well as the groups a particular user belongs to.
+  - User_Chanel
+      - This association table contains two primary columns: user_id and blog_id, which reference the respective ids in the User and Blog tables. By maintaining these connections, user_channel enables the system to efficiently track which users belong to which blogs and vice versa, without the need to modify the main User or Blog tables directly. This design allows for flexible membership management, where users can join multiple groups and groups can have multiple members, all managed through simple entries in the user_channel table. 
+  - ChatMessage
+    - The ChatMessage Table stores all communication within the application's group system. It captures and organizes each individual message sent in any group conversation. The table's structure includes fields for the actual message content, ensuring that all dialogue is preserved. It also stores a reference to the specific group (blog) where the message was posted, enabling efficient retrieval of conversations within each group context. The inclusion of a timestamp for each message allows for chronological ordering and time-based queries. Additionally, the table maintains a link to the user who authored each message, facilitating user-specific message tracking. This design enables the application to support robust group discussions and maintain conversation history.
+  - User_info
+    - The User_info Table functions stores information for group-specific user data within the application. It captures and maintains a set of dynamic attributes for each user that can vary depending on the group context. This table allows for the storage of user-specific information such as their current mood, budget constraints, relevant dates, and travel preferences, all of which may differ from one group to another. By linking user IDs with group IDs, the table creates a flexible structure where a single user can have distinct profiles or statuses across multiple groups. This design enables personalized user experiences within each group, supports targeted content delivery, and facilitates group-specific analytics.
 ## Extra Backend Details : 
 > In this section, I'll walk you through the structure of the backend architecture and a detailed implementation of a few selected features.
 
