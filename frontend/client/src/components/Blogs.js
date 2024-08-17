@@ -11,7 +11,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import dayjs from "dayjs";
 
-const Blogs = () => {
+const CreateGroup = () => {
   const {
     register,
     watch,
@@ -319,4 +319,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default CreateGroup;

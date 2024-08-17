@@ -45,6 +45,7 @@ class BlogsResource(Resource):
 
     @blog_ns.expect(blog_model_get)
     @blog_ns.marshal_list_with(blog_model)
+    @jwt_required()
     def get(self, username):
         db_user =  User.query.filter_by(username = username).first()
         return db_user.blogs

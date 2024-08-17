@@ -6,26 +6,75 @@ import HomePage from "./components/Home";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import Signup from "./components/Signup";
-import Blogs from "./components/Blogs";
+import CreateGroup from "./components/Blogs";
 import JoinGroup from "./components/joinGroup";
-import Profile from "./components/user_profile";
 import Success from "./components/signupSuccess";
 import Failure from "./components/signupFailure";
-import Stats from "./components/Stats";
 import { useAuth, login, logout } from "./auth.tsx";
 
 const App = () => {
-  const { isAuthenticated, authSession } = useAuth();
   const [initial, setInitial] = useState(true);
+  const [check, setCheck] = useState(true);
+
+  const fetchBlogs = async () => {
+    console.log("CHECKER");
+    const username = JSON.parse(localStorage.getItem("username"));
+    const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+    if (username && token) {
+      if (username.name != "" && token.accessToken != "") {
+        console.log("IN CHECKER");
+        const requestOptions = {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`, // Use access_token
+            "content-Type": "application/json",
+          },
+        };
+
+        try {
+          const res = await fetch(
+            `/blog/blogs/${encodeURIComponent(username.name)}`,
+            requestOptions
+          );
+
+          if (res.status === 401) {
+            setCheck(false);
+            throw new Error("Unauthorized");
+          }
+
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const data = await res.json();
+          console.log("Blogs fetched:", data);
+          setCheck(true);
+        } catch (error) {
+          console.error("Error fetching blogs:", error.message);
+          setCheck(false);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const initialize = async () => {
+      await fetchBlogs();
+    };
+    initialize();
+  }, []);
 
   useEffect(() => {
     const refreshToken = async () => {
-      if (!initial && authSession) {
+      const username = JSON.parse(localStorage.getItem("username"));
+      const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+      if (username && !check && token) {
+        console.log("hi");
         try {
           const response = await fetch("/auth/refresh", {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${authSession.refresh_token}`,
+              Authorization: `Bearer ${token.refreshToken}`,
             },
           });
 
@@ -35,25 +84,29 @@ const App = () => {
 
           const data = await response.json();
           const updatedSession = {
-            ...authSession,
-            access_token: data.accessToken,
+            ...token,
+            accessToken: data.accessToken,
           };
           localStorage.setItem(
             "REACT_TOKEN_AUTH_KEY",
             JSON.stringify(updatedSession)
           );
           login(updatedSession); // Update the session with the new access token
+          // Reset check and re-fetch blogs
+          setCheck(true);
+          window.location.reload();
         } catch (error) {
           console.error("Failed to refresh token:", error.message);
           logout(); // Handle logout if refresh fails
           localStorage.removeItem("REACT_TOKEN_AUTH_KEY");
+          localStorage.removeItem("username");
         }
       }
       setInitial(false);
     };
 
     refreshToken();
-  }, [initial, authSession, login, logout]);
+  }, [check]);
 
   return (
     <Router>
@@ -66,15 +119,13 @@ const App = () => {
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/Blogs" element={<Blogs />} />
+          <Route path="/createGroup" element={<CreateGroup />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Logout" element={<Logout />} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/JoinGroup" element={<JoinGroup />} />
-          <Route path="/Profile" element={<Profile />} />
           <Route path="/Failure" element={<Failure />} />
           <Route path="/Success" element={<Success />} />
-          <Route path="/Stats" element={<Stats />} />
         </Routes>
       </div>
     </Router>

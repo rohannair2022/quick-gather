@@ -16,7 +16,7 @@ function LoggedInLinks() {
       </Link>
 
       <Link
-        to="/Blogs"
+        to="/createGroup"
         className="nav-link px-4"
         style={{ fontWeight: "bold" }}
       >
