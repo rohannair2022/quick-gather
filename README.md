@@ -30,7 +30,7 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
     - user: This namespace focuses on personal user details, such as modifying profiles and uploading profile pictures.
     
 
-- ### Features
+- ### Features (Some of them)
     - **Login/ Signup Authentication using Email Verification** :
       - User authentication was one of the first features I implemented after setting up the initial DB schema with SQLAlchemy. The initial User auth structure followed a very simple CRUD interface. The user would interact with the frontend form and send
         a POST request to the server after the form was validated in the frontend. The sign-up POST Request would check if the username already exist in the DB. We do this check by searching through imported User Table Model and query searching the username. If it exists,
@@ -222,6 +222,34 @@ My goal was to have the freedom to explore, learn, and gradually incorporate new
         ```
 
 ## Frontend 
+I chose React for the frontend to streamline development. This library reduces the need for extensive JavaScript coding while efficiently managing component updates based on data changes. React's advantages include improved state handling, faster development through JSX syntax, and performance optimization via the virtual DOM.
+
+- ### Routes : Component
+  - '/' : HomePage
+  - '/Login' : Login
+  - '/Signup' : Signup
+  - '/createGroup' : CreateGroup
+  - '/joinGroup' : JoinGroup
+  - '/Profile' : Profile
+  - '/Failure' : Failsure
+  - '/Success' : Success
+    
+- ### External Libraries/ Componenets Used
+  - [React Bootstrap Library](https://react-bootstrap.netlify.app/) : 
+    - Container, Rows, Columns : There were the react components from the React-Bootstrap Library that I used alot for styling most of the internal components in my application. These components were particularly helpful because I was already comfortable with Bootsap and, these 
+      components use the same syntax as Bootstrap 5. Therefore it was easy to recreate a responsive design with the same syntaxes.
+    - Modals: I found the modals component especially useful for implementing "pop-ups" in various features like chatting, updating blogs, and viewing user stats. They significantly streamlined my development process by eliminating the need to create separate components and routes for every minor feature.
+    - Buttons: The Buttons component was preferred because it offered predefined styles and additional functionalities beyond what a standard HTML button provides.
+    - Alerts : The Alerts component were used as small "pop-ups" to notify users about the success or failure of actions. An action for example would be a login request. The server's response would be parsed and displayed in these alerts to keep users informed on what happened.
+    - Forms : The Forms component was arguably one of the most valuable components to me from the library. It offers extensive functionality that goes beyond what a standard HTML form provides. The component excels in several areas: it supports thorough error checking to ensure data integrity, enables easy design resetting to quickly revert to the initial form layout, and facilitates the registration and submission of form elements. 
+  - React Router
+  - React Token Auth
+  - React Hook Form
+  - MUI Date Picker
+    
+- ### Components Created 
+  
+  
 
 ## Design & SQL Relationships
 
