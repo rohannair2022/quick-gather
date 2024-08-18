@@ -15,6 +15,7 @@ from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 
 def create_app(config):
+
     app = Flask(__name__, static_url_path='/', static_folder ='./client/build')
     app.config.from_object(config)
 
@@ -29,7 +30,6 @@ def create_app(config):
     api.add_namespace(user_ns)
 
     CORS(app, resources={r"/*": {"origins": "*"}})
-
 
     @app.route('/')
     def index():
