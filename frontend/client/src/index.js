@@ -17,9 +17,29 @@ const App = () => {
   const [check, setCheck] = useState(true);
 
   const fetchBlogs = async () => {
-    console.log("CHECKER");
-    const username = JSON.parse(localStorage.getItem("username"));
-    const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+    const usernameRaw = localStorage.getItem("username");
+    const tokenRaw = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
+
+    let username, token;
+
+    if (usernameRaw) {
+      try {
+        username = JSON.parse(usernameRaw);
+      } catch (e) {
+        console.error("Error parsing username:", e);
+        return;
+      }
+    }
+
+    if (tokenRaw) {
+      try {
+        token = JSON.parse(tokenRaw);
+      } catch (e) {
+        console.error("Error parsing token:", e);
+        return;
+      }
+    }
+
     if (username && token) {
       if (username.name != "" && token.accessToken != "") {
         console.log("IN CHECKER");
@@ -66,8 +86,28 @@ const App = () => {
 
   useEffect(() => {
     const refreshToken = async () => {
-      const username = JSON.parse(localStorage.getItem("username"));
-      const token = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+      const usernameRaw = localStorage.getItem("username");
+      const tokenRaw = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
+
+      let username, token;
+
+      if (usernameRaw) {
+        try {
+          username = JSON.parse(usernameRaw);
+        } catch (e) {
+          console.error("Error parsing username:", e);
+          return;
+        }
+      }
+
+      if (tokenRaw) {
+        try {
+          token = JSON.parse(tokenRaw);
+        } catch (e) {
+          console.error("Error parsing token:", e);
+          return;
+        }
+      }
       if (username && !check && token) {
         console.log("hi");
         try {
@@ -108,6 +148,8 @@ const App = () => {
     refreshToken();
   }, [check]);
 
+  const [logged] = useAuth();
+
   return (
     <Router>
       {/*
@@ -119,13 +161,20 @@ const App = () => {
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/createGroup" element={<CreateGroup />} />
           <Route path="/Login" element={<Login />} />
-          <Route path="/Logout" element={<Logout />} />
           <Route path="/Signup" element={<Signup />} />
-          <Route path="/JoinGroup" element={<JoinGroup />} />
           <Route path="/Failure" element={<Failure />} />
           <Route path="/Success" element={<Success />} />
+
+          <Route
+            path="/createGroup"
+            element={logged ? <CreateGroup /> : <Login />}
+          />
+
+          <Route
+            path="/joinGroup"
+            element={logged ? <JoinGroup /> : <Login />}
+          />
         </Routes>
       </div>
     </Router>
