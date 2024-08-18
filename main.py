@@ -46,7 +46,7 @@ def create_app(config):
     return app, mail
 
 app, mail = create_app(ProdConfig)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
@@ -119,6 +119,3 @@ def on_message(data):
         emit('message_confirm', {'msg': message_text, 'username': username}, room=room)
     else:
         emit('error', {'msg': 'Invalid user or blog'}, room=request.sid)
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
