@@ -16,7 +16,7 @@ from itsdangerous import URLSafeTimedSerializer
 
 def create_app(config):
 
-    app = Flask(__name__, static_url_path='/', static_folder ='./client/build')
+    app = Flask(__name__, static_url_path='/', static_folder ='./frontend/client/build')
     app.config.from_object(config)
 
     db.init_app(app)
