@@ -16,8 +16,11 @@ import io from "socket.io-client";
 import { useRef } from "react";
 import Stats from "./Stats";
 import Profile from "./user_profile";
-const socket = io("https://quickgather-5069dcada862.herokuapp.com", {
-  transports: ["websocket"], // Ensure WebSocket transport is used
+const REACT_APP_API_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://quickgather-5069dcada862.herokuapp.com";
+const socket = io(REACT_APP_API_URL, {
+  transports: ["websocket"],
 });
 
 const LoggedinHome = () => {
