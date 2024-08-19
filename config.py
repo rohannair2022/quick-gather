@@ -31,7 +31,7 @@ class DevConfig(Config):
 
 
 class ProdConfig(Config): 
-    raw_uri = config('DATABASE_URI')
+    raw_uri = config('DATABASE_URL')
     # Replace the postgres:// prefix with postgresql://
     SQLALCHEMY_DATABASE_URI = raw_uri.replace("postgres://", "postgresql://", 1)
     DEBUG = config('DEBUG')
