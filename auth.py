@@ -75,7 +75,7 @@ def process_signup(data):
 
         # Create confirmation link
         with app.test_request_context():
-            base_url = 'http://localhost:5000'  # or https:// if using SSL
+            base_url = 'https://quickgather-5069dcada862.herokuapp.com/'  
             confirm_url = f"{base_url}{url_for('confirm_email', token=token)}"
 
         # Send email
