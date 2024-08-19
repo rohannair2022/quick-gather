@@ -46,7 +46,7 @@ def create_app(config):
     return app, mail
 
 app, mail = create_app(ProdConfig)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 

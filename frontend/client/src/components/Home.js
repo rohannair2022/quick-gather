@@ -16,7 +16,9 @@ import io from "socket.io-client";
 import { useRef } from "react";
 import Stats from "./Stats";
 import Profile from "./user_profile";
-const socket = io();
+const socket = io("https://quickgather-5069dcada862.herokuapp.com", {
+  transports: ["websocket"], // Ensure WebSocket transport is used
+});
 
 const LoggedinHome = () => {
   // Each Group Joined
@@ -443,15 +445,15 @@ const LoggedoutHome = () => {
                 Welcome to QuickGather
               </h1>
               <h5 className="body mb-3">
-                QuickGather is an innovative social media platform enhanced by
-                AI, designed to streamline event planning with your friends,
-                regardless of the event's size. Users have the flexibility to
-                create or join groups, specifying their mood, budget, and travel
-                distance preferences. Leveraging advanced algorithms,
-                QuickGather predicts the most suitable factors and recommends
-                activities tailored to these preferences. Whether organizing a
-                casual get-together or a large gathering, QuickGather simplifies
-                the process, ensuring personalized and enjoyable experiences for
+                QuickGather is an innovative social media platform , designed to
+                streamline event planning with your friends, regardless of the
+                event's size. Users have the flexibility to create or join
+                groups, specifying their mood, budget, and travel distance
+                preferences. Leveraging advanced algorithms, QuickGather
+                predicts the most suitable factors and recommends activities
+                tailored to these preferences. Whether organizing a casual
+                get-together or a large gathering, QuickGather simplifies the
+                process, ensuring personalized and enjoyable experiences for
                 everyone involved.
               </h5>
             </Row>
