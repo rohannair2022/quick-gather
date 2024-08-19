@@ -31,8 +31,7 @@ class DevConfig(Config):
 
 
 class ProdConfig(Config): 
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, 'dev.db')
-    SQLALCHEMY_DATABASE_URI ='postgresql://postgres:Database4833@localhost:5432/userDB'
+    SQLALCHEMY_DATABASE_URI = config('DATABASE_URL')
     DEBUG = config('DEBUG')
     SQLALCHEMY_ECHO=config('ECHO', cast=bool)
     JWT_SECRET_KEY = config('JWT_SECRET_KEY')
