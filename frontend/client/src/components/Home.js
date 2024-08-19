@@ -16,7 +16,7 @@ import io from "socket.io-client";
 import { useRef } from "react";
 import Stats from "./Stats";
 import Profile from "./user_profile";
-const socket = io("http://127.0.0.1:5000", {});
+const socket = io("https://quickgather-5069dcada862.herokuapp.com/", {});
 
 const LoggedinHome = () => {
   // Each Group Joined

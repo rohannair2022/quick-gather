@@ -58,12 +58,12 @@ def confirm_email(token):
     try:
         token_data = serializer.loads(token, salt='email-confirm', max_age=3600)  # 1 hour expiration
     except:
-        return redirect("http://localhost:3000/Failure")
+        return redirect("https://quickgather-5069dcada862.herokuapp.com/Failure")
 
     # Check if user already exists
     existing_user = User.query.filter_by(username=token_data['username']).first()
     if existing_user:
-        return redirect("http://localhost:3000/Failure")
+        return redirect("https://quickgather-5069dcada862.herokuapp.com/Failure")
 
     # Create new user
     new_user = User(
@@ -74,7 +74,7 @@ def confirm_email(token):
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect("http://localhost:3000/Success")
+    return redirect("https://quickgather-5069dcada862.herokuapp.com/Success")
 
 @socketio.on('join')
 def on_join(data):
