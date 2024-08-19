@@ -31,7 +31,7 @@ class DevConfig(Config):
 
 
 class ProdConfig(Config): 
-    SQLALCHEMY_DATABASE_URI = config('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = 'postgresql://' + config('DATABASE_URL')
     DEBUG = config('DEBUG')
     SQLALCHEMY_ECHO=config('ECHO', cast=bool)
     JWT_SECRET_KEY = config('JWT_SECRET_KEY')
