@@ -4,6 +4,8 @@
 QuickGather is a social media app designed to simplify event planning with friends. Users can join/create a group by entering their mood, availability, budget, and preferred travel distance. 
 The app then generates group ‘stats,’ providing individual and collective insights to help everyone find common ground and plan events more efficiently. 
 
+https://quickgather-5069dcada862.herokuapp.com/
+
 ## Tech Stack
 - Backend : Python (Flask)
 - Frontend : React-Bootstrap, CSS
