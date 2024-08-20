@@ -16,7 +16,7 @@ import io from "socket.io-client";
 import { useRef } from "react";
 import Stats from "./Stats";
 import Profile from "./user_profile";
-const socket = io();
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 const LoggedinHome = () => {
   // Each Group Joined
