@@ -7,10 +7,10 @@ The app then generates group ‘stats,’ providing individual and collective in
 https://quickgather-5069dcada862.herokuapp.com/
 
 ## Tech Stack
-- Backend : Python (Flask)
+- Backend : Python (Flask), Gunicorn
 - Frontend : React-Bootstrap, CSS
 - Database and ORMs : PostgreSQL, SQLAlchemy
-- Tools : AWS S3
+- Tools : AWS S3, RDS, Heroku
 
 
   
