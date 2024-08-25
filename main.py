@@ -119,3 +119,4 @@ def on_message(data):
         emit('message_confirm', {'msg': message_text, 'username': username}, room=room)
     else:
         emit('error', {'msg': 'Invalid user or blog'}, room=request.sid)
+
