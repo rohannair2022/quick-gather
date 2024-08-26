@@ -104,7 +104,7 @@ class BlogResource(Resource):
     def put(self, id):
         blog_to_update = Blog.query.get_or_404(id)
         data = request.get_json()
-        blog_to_update.update(data.get("title"), data.get("description"))
+        blog_to_update.update_content(data.get("title"), data.get("description"))
         return blog_to_update
 
     @blog_ns.marshal_with(blog_model)
