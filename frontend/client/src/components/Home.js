@@ -419,6 +419,10 @@ const LoggedinHome = () => {
 };
 
 const LoggedoutHome = () => {
+  // For Images in Logged Out Home
+  const [chatImg, setChatImg] = useState(false);
+  const [homeImg, setHomeImg] = useState(false);
+  const [groupImg, setGroupImg] = useState(false);
   const [isHoveredLogin, setIsHoveredLogin] = useState(false);
   const [isHoveredSignup, setIsHoveredSignup] = useState(false);
   return (
@@ -432,7 +436,7 @@ const LoggedoutHome = () => {
               className="img-fluid"
             />
           </Col>
-          <Col xs={12} lg={6} className="text-left mt-4 px-5">
+          <Col xs={12} lg={6} className="text-left mt-3 px-5 mb-5">
             <Row className="justify-content-center">
               <h1
                 className="title mt-5 mb-5"
@@ -506,6 +510,137 @@ const LoggedoutHome = () => {
                 </Link>
               </Col>
             </Row>
+          </Col>
+        </Row>
+
+        <Row className="justify-content-center align-items-center py-5 mb-4 mt-5 mx-3">
+          <Col xs={12} xl={5} className="text-center mt-3 mb-lg-0">
+            <img
+              src={process.env.PUBLIC_URL + "/join_create.png"}
+              alt="Short Logo"
+              className="img-fluid"
+              style={{
+                width: "100%",
+                maxWidth: 800,
+                boxShadow: groupImg
+                  ? "0 0 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.3)"
+                  : "0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)",
+                border: "8px solid whitesmoke",
+                borderRadius: "12px",
+                transition: "transform 0.7s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={() => setGroupImg(true)}
+              onMouseLeave={() => setGroupImg(false)}
+            />
+          </Col>
+          <Col xs={12} xl={1}></Col>
+          <Col xs={12} xl={5} className="text-center mt-3 mb-4 mb-lg-0 py-5">
+            <h2
+              className="title mt-5 mb-5"
+              style={{
+                color: "#333",
+              }}
+            >
+              Join / Create a Group for planning each event
+            </h2>
+            <h5 className="body mb-3">
+              QuickGather allows you to create or join a group with personalized
+              preferences. Users can create a group by setting the title and
+              description of the group, along with their personalized mood,
+              budget, travel distance and finally one or more dates that they
+              are free to meet. Similarly the join feature acts the same way
+              where the User types the id of the group they want to join and is
+              allowed to join the group with their personaized preferences
+            </h5>
+          </Col>
+        </Row>
+
+        <Row className="justify-content-center align-items-center px-3 py-5 mb-4 mt-5">
+          <Col
+            xs={12}
+            xl={5}
+            className="text-center mt-3 mb-lg-0 py-5 order-3 order-xl-1"
+          >
+            <h2 className="title mb-4" style={{ color: "#333" }}>
+              Join multiple groups, each with its own preference.
+            </h2>
+            <h5 className="body">
+              QuickGather facilitates group planning by allowing users to
+              participate in multiple groups, each with their own unique set of
+              preferences. Within each group, you can customize your personal
+              preferences, making them visible to other group members.
+              Similarly, you can easily view the preferences of your fellow
+              group members by simply clicking on their profile pictures in the
+              group section of the home tab. This feature promotes transparency
+              and helps streamline the process of planning group activities.
+            </h5>
+          </Col>
+          <Col xs={12} xl={1} className="text-center order-2 order-xl-2"></Col>
+          <Col
+            xs={12}
+            xl={5}
+            className="text-center mt-3 mb-5 mb-lg-0 order-1 order-xl-3"
+          >
+            <img
+              src={process.env.PUBLIC_URL + "/home_stat.png"}
+              alt="Short Logo"
+              className="img-fluid"
+              style={{
+                width: "100%",
+                maxWidth: 800,
+                boxShadow: homeImg
+                  ? "0 0 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.3)"
+                  : "0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)",
+                border: "8px solid white",
+                borderRadius: "12px",
+                transition: "transform 0.7s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={() => setHomeImg(true)}
+              onMouseLeave={() => setHomeImg(false)}
+            />
+          </Col>
+        </Row>
+
+        <Row className="justify-content-center px-3 py-5 mt-5 mb-5">
+          <Col xs={12} xl={5} className="text-center mt-4 mb-2 mb-lg-0">
+            <img
+              src={process.env.PUBLIC_URL + "/chat.png"}
+              alt="Short Logo"
+              className="img-fluid"
+              style={{
+                width: "100%",
+                maxWidth: 800,
+                boxShadow: chatImg
+                  ? "0 0 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.3)"
+                  : "0 0 10px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)",
+                border: "8px solid white",
+                borderRadius: "12px",
+                transition: "transform 0.7s ease, box-shadow 0.2s ease",
+              }}
+              onMouseEnter={() => setChatImg(true)}
+              onMouseLeave={() => setChatImg(false)}
+            />
+          </Col>
+          <Col xs={12} xl={1} className="text-center mb-lg-0"></Col>
+          <Col xs={12} xl={5} className="text-center mb-4 py-5 mb-lg-0 px-4 ">
+            <h2
+              className="title mt-5 mb-5"
+              style={{
+                color: "#333",
+              }}
+            >
+              Chat and find shared availability with group members
+            </h2>
+            <h5 className="body mb-3">
+              QuickGather enhances group coordination through its real-time chat
+              feature, allowing members to communicate instantly and plan events
+              together. The platform goes a step further by automatically
+              calculating and displaying the average preferences of all group
+              members within the chat interface. This unique feature streamlines
+              discussions by highlighting common interests, making it easier for
+              the group to reach consensus and plan activities that appeal to
+              everyone.
+            </h5>
           </Col>
         </Row>
       </Container>
